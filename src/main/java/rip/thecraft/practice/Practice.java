@@ -15,6 +15,7 @@ import rip.thecraft.practice.match.MatchManager;
 import rip.thecraft.practice.player.PlayerManager;
 import rip.thecraft.practice.queue.QueueManager;
 import rip.thecraft.practice.settings.SettingsManager;
+import rip.thecraft.practice.util.MessageManager;
 import rip.thecraft.practice.world.WorldManager;
 
 public class Practice extends JavaPlugin {
@@ -40,6 +41,7 @@ public class Practice extends JavaPlugin {
     private ItemManager itemManager;
     private SettingsManager settingsManager;
     private rip.thecraft.practice.tournament.TournamentManager tournamentManager;
+    private MessageManager messageManager;
 
     @Override
     public void onEnable() {
@@ -50,6 +52,7 @@ public class Practice extends JavaPlugin {
         
         // Save scoreboard configuration only if it doesn't exist (don't overwrite)
         saveResource("scoreboard.yml", false);
+        saveResource("messages.yml", false);
 
         // Initialize MongoDB connection
         initializeMongoDB();
@@ -81,6 +84,7 @@ public class Practice extends JavaPlugin {
         this.itemManager = new ItemManager(this);
         this.settingsManager = new SettingsManager(this);
         this.tournamentManager = new rip.thecraft.practice.tournament.TournamentManager();
+        this.messageManager = new MessageManager(this);
         
         // Set up cross-references after all managers are initialized
         this.queueManager.setMatchManager(this.matchManager);
@@ -249,5 +253,9 @@ public class Practice extends JavaPlugin {
 
     public rip.thecraft.practice.tournament.TournamentManager getTournamentManager() {
         return tournamentManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return messageManager;
     }
 }

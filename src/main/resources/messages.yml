@@ -1,0 +1,196 @@
+# CraftPractice Messages Configuration
+# This file contains all customizable messages for the CraftPractice plugin
+
+# Permission Messages
+no-permission: "&cYou do not have permission to use this command."
+
+# General Error Messages
+player-only: "&cThis command can only be executed by a player."
+player-not-found: "&cPlayer &e%player% &cnot found."
+invalid-usage: "&cInvalid usage. Use: &e%usage%"
+
+# Practice Command Messages
+practice-join: "&aYou have joined the practice queue for &e%kit%&a."
+practice-leave: "&cYou have left the practice queue."
+practice-already-in-queue: "&cYou are already in a queue."
+practice-not-in-queue: "&cYou are not in any queue."
+practice-queue-full: "&cThe queue is currently full. Please try again later."
+
+# Arena Command Messages
+arena-created: "&aArena &e%arena% &ahas been created."
+arena-deleted: "&cArena &e%arena% &chas been deleted."
+arena-not-found: "&cArena &e%arena% &cnot found."
+arena-already-exists: "&cArena &e%arena% &calready exists."
+arena-spawn-set: "&aSpawn point set for arena &e%arena%&a."
+arena-spawn-not-set: "&cSpawn point not set for arena &e%arena%&c."
+
+# Kit Command Messages
+kit-created: "&aKit &e%kit% &ahas been created."
+kit-deleted: "&cKit &e%kit% &chas been deleted."
+kit-not-found: "&cKit &e%kit% &cnot found."
+kit-already-exists: "&cKit &e%kit% &calready exists."
+kit-edited: "&aKit &e%kit% &ahas been edited."
+kit-saved: "&aKit &e%kit% &ahas been saved."
+kit-inventory-set: "&aInventory set for kit &e%kit%&a."
+
+# Queue Command Messages
+queue-join: "&aYou have joined the &e%queue% &aqueue."
+queue-leave: "&cYou have left the queue."
+queue-already-in: "&cYou are already in a queue."
+queue-not-in: "&cYou are not in any queue."
+queue-finding-match: "&aSearching for a match..."
+queue-match-found: "&aMatch found! Connecting to &e%arena%&a..."
+
+# Tournament Command Messages
+tournament-created: "&aTournament &e%tournament% &ahas been created."
+tournament-started: "&aTournament &e%tournament% &ahas started."
+tournament-ended: "&cTournament &e%tournament% &chas ended."
+tournament-join: "&aYou have joined tournament &e%tournament%&a."
+tournament-leave: "&cYou have left tournament &e%tournament%&c."
+tournament-not-found: "&cTournament &e%tournament% &cnot found."
+tournament-already-joined: "&cYou are already in a tournament."
+tournament-not-started: "&cTournament has not started yet."
+tournament-round-start: "&aRound &e%round% &ahas started!"
+tournament-winner: "&6&l%player% &ahas won the tournament!"
+
+# Spectate Command Messages
+spectate-join: "&aYou are now spectating &e%player%&a."
+spectate-leave: "&cYou are no longer spectating."
+spectate-not-found: "&cNo match found to spectate."
+spectate-not-allowed: "&cYou cannot spectate this match."
+
+# Settings Command Messages
+settings-updated: "&aYour settings have been updated."
+settings-reset: "&aYour settings have been reset to default."
+
+# Spawn Command Messages
+spawn-teleported: "&aYou have been teleported to spawn."
+spawn-not-set: "&cSpawn location is not set."
+
+# Build Command Messages
+build-enabled: "&aBuild mode enabled."
+build-disabled: "&cBuild mode disabled."
+build-no-permission: "&cYou do not have permission to build here."
+
+# HitDelay Command Messages
+hitdelay-set: "&aHit delay set to &e%delay%&a."
+hitdelay-reset: "&aHit delay reset to default."
+hitdelay-invalid: "&cInvalid hit delay value."
+
+# Knockback Command Messages
+knockback-set: "&aKnockback settings updated."
+knockback-reset: "&aKnockback settings reset to default."
+
+# Leaderboard Command Messages
+leaderboard-shown: "&aShowing leaderboard for &e%kit%&a."
+leaderboard-not-available: "&cLeaderboard not available for this kit."
+
+# Match Messages
+match-starting: "&aMatch starting in &e%seconds% &aseconds..."
+match-started: "&aMatch has started!"
+match-ended: "&aMatch ended!"
+match-winner: "&6&l%winner% &ahas won the match!"
+match-tie: "&aThe match ended in a tie!"
+match-countdown: "&e%seconds%"
+
+# Duel Messages
+duel-sent: "&aDuel request sent to &e%player%&a."
+duel-received: "&aYou received a duel request from &e%player%&a. Type &e/duel accept &ato accept."
+duel-accepted: "&aDuel accepted! Starting match..."
+duel-declined: "&cDuel declined."
+duel-expired: "&cDuel request has expired."
+duel-already-sent: "&cYou already have a pending duel request."
+duel-not-found: "&cNo duel request found."
+
+# Party Messages
+party-created: "&aParty created."
+party-disbanded: "&cParty disbanded."
+party-join: "&a%player% &ahas joined the party."
+party-leave: "&c%player% &chas left the party."
+party-kicked: "&c%player% &chas been kicked from the party."
+party-invite-sent: "&aInvite sent to &e%player%&a."
+party-invite-received: "&aYou have been invited to &e%player%'s &aparty. Type &e/party join &ato accept."
+party-not-invited: "&cYou are not invited to this party."
+party-full: "&cThe party is full."
+party-not-found: "&cParty not found."
+
+# Scoreboard Messages
+scoreboard-title: "&6&lCraftPractice"
+scoreboard-in-lobby: "&7In Lobby"
+scoreboard-in-queue: "&7In Queue"
+scoreboard-in-match: "&7In Match"
+scoreboard-spectating: "&7Spectating"
+
+# GUI Titles
+gui-kits: "&8Select a Kit"
+gui-arenas: "&8Select an Arena"
+gui-queues: "&8Select a Queue"
+gui-tournaments: "&8Tournaments"
+gui-leaderboard: "&8Leaderboard"
+gui-settings: "&8Settings"
+
+# Action Bar Messages
+actionbar-in-queue: "&aSearching for opponent..."
+actionbar-match-countdown: "&aMatch starting in &e%seconds%&a..."
+actionbar-spectating: "&7Spectating &e%player%"
+
+# Title Messages
+title-match-start: "&a&lMATCH START"
+title-match-end: "&6&lMATCH END"
+title-tournament-start: "&6&lTOURNAMENT"
+title-tournament-win: "&6&lVICTORY"
+
+# Chat Formatting
+chat-format-party: "&9[Party] &7%player%&8: &f%message%"
+chat-format-match: "&6[Match] &7%player%&8: &f%message%"
+chat-format-spectator: "&7[Spectator] &7%player%&8: &f%message%"
+
+# Broadcast Messages
+broadcast-tournament-start: "&6&l[Tournament] &aA new tournament has started! Type &e/tournament join &ato participate."
+broadcast-tournament-end: "&6&l[Tournament] &cThe tournament has ended. Congratulations to the winner!"
+broadcast-match-start: "&a&l[Match] &e%player1% &7vs &e%player2% &7in &e%kit%"
+
+# Help Messages
+help-header: "&6&lCraftPractice Commands"
+help-footer: "&7Use &e/command help &7for more information"
+
+# Update Messages
+update-available: "&aA new update is available! Download from: &e%url%"
+update-downloaded: "&aUpdate downloaded successfully. Restart the server to apply."
+
+# Debug Messages
+debug-enabled: "&aDebug mode enabled."
+debug-disabled: "&cDebug mode disabled."
+
+# Economy Messages (if applicable)
+economy-insufficient-funds: "&cYou don't have enough money to do that."
+economy-reward-received: "&aYou received &e%amount% &afor winning the match."
+
+# Placeholder Messages
+placeholder-no-data: "N/A"
+placeholder-loading: "Loading..."
+
+# Customizable Color Codes
+# You can use these color codes throughout the plugin:
+# &0 - Black
+# &1 - Dark Blue
+# &2 - Dark Green
+# &3 - Dark Aqua
+# &4 - Dark Red
+# &5 - Dark Purple
+# &6 - Gold
+# &7 - Gray
+# &8 - Dark Gray
+# &9 - Blue
+# &a - Green
+# &b - Aqua
+# &c - Red
+# &d - Light Purple
+# &e - Yellow
+# &f - White
+# &k - Obfuscated
+# &l - Bold
+# &m - Strikethrough
+# &n - Underline
+# &o - Italic
+# &r - Reset

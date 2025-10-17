@@ -7,20 +7,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
 
+import java.util.Map;
+
 public class PracticeCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            Practice.getInstance().getMessageManager().sendPlayerOnly(sender);
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            // Open kit selection GUI
-            player.openInventory(Practice.getInstance().getKitManager().createKitSelectionGUI());
+            sendHelp(player);
             return true;
         }
 
@@ -41,9 +42,8 @@ public class PracticeCommand implements CommandExecutor {
                 teleportToSpawn(player);
                 break;
             default:
-                if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                    player.sendMessage(ChatColor.RED + "Unknown subcommand. Use /practice help for help.");
-                }
+                Practice.getInstance().getMessageManager().sendMessage(player, "invalid-usage", 
+                    Map.of("usage", "/practice help"));
                 break;
         }
 
@@ -89,9 +89,7 @@ public class PracticeCommand implements CommandExecutor {
 
     private void setSpawn(Player player) {
         if (!player.hasPermission("practice.admin")) {
-            if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.RED + "You don't have permission to set the practice spawn!");
-            }
+            Practice.getInstance().getMessageManager().sendNoPermission(player);
             return;
         }
 
@@ -105,29 +103,21 @@ public class PracticeCommand implements CommandExecutor {
         config.set("spawn.pitch", player.getLocation().getPitch());
         Practice.getInstance().saveConfig();
 
-        if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-            player.sendMessage(ChatColor.GREEN + "Practice spawn set to your current location!");
-        }
+        Practice.getInstance().getMessageManager().sendMessage(player, "spawn-teleported");
     }
 
     private void debugMatches(Player player) {
         if (!player.hasPermission("practice.admin")) {
-            if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
-            }
+            Practice.getInstance().getMessageManager().sendNoPermission(player);
             return;
         }
         
         var matchManager = Practice.getInstance().getMatchManager();
         if (matchManager != null) {
             matchManager.debugActiveMatches();
-            if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.GREEN + "Debug info logged to console!");
-            }
+            Practice.getInstance().getMessageManager().sendMessage(player, "debug-enabled");
         } else {
-            if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.RED + "MatchManager is null!");
-            }
+            Practice.getInstance().getMessageManager().sendMessage(player, "debug-disabled");
         }
     }
 
