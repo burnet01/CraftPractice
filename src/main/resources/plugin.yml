@@ -1,0 +1,80 @@
+name: CraftPractice
+main: rip.thecraft.practice.Practice
+version: 0.0.1
+description: Competitive PvP Practice Plugin
+author: TheCraft
+folia-supported: true
+
+commands:
+  practice:
+    description: Main practice plugin command
+    usage: /practice
+    aliases: [prac, duel]
+  arena:
+    description: Arena management commands
+    usage: /arena <create|setspawn|setbounds|list|delete>
+    aliases: [arenas]
+  kit:
+    description: Kit management commands
+    usage: /kit <create|edit|delete|list>
+    aliases: [kits]
+  kb:
+    description: Knockback.
+    usage: /kb
+    aliases: knockback
+  leaderboard:
+    description: leaderboard
+    usage: /leaderboard
+    aliases: lb
+  queue:
+    description: Queue management commands
+    usage: /queue <join|leave|status>
+    aliases: [q]
+  test:
+    description: Test commands for debugging
+    usage: /test <debug|check|forceend>
+    permission: practice.admin
+  build:
+    description: Build bypass commands
+    usage: /build [on|off|status]
+    permission: practice.build.bypass
+  spec:
+    description: spec a fight
+    usage: /spec <player>
+  hd:
+    description: Hit delay
+    usage: /hd [create|list|info]
+    permission: practice.hd
+  settings:
+    description: settings
+    usage: /settings
+  spawn:
+    description: Sends player to spawn and gives them the correct items.
+    usage: /spawn
+  tournament:
+    description: tournament
+    usage: /tournament
+permissions:
+  practice.*:
+    description: All practice permissions
+    children:
+      practice.admin: true
+      practice.user: true
+  practice.admin:
+    description: Admin permissions
+    children:
+      practice.arena: true
+      practice.kit: true
+      practice.build.bypass: true
+  practice.user:
+    description: User permissions
+    default: true
+  practice.arena:
+    description: Arena management
+    default: op
+  practice.kit:
+    description: Kit management
+    default: op
+  practice.build.bypass:
+    description: Build bypass permission
+    default: op

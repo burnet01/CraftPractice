@@ -1,0 +1,26 @@
+# Practice Plugin Configuration
+
+# MongoDB Configuration
+mongodb:
+  uri: "mongodb://localhost:27017"
+  database: "practice"
+
+# Match Settings
+match:
+  countdown: 5
+  max-duration: 600
+
+# Queue Settings
+queue:
+  elo-k-factor: 32
+  
+# Arena Settings
+arena:
+  auto-regenerate: true
+  
+# Kit Settings
+kit:
+  default-kits:
+    - "nodebuff"
+    - "builduhc"
+    - "sumo"
