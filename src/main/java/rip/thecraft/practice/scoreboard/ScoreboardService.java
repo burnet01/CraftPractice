@@ -34,12 +34,15 @@ public class ScoreboardService {
         this.plugin = plugin;
         this.stateManager = new StateScoreboardManager(plugin);
         
-        // Initialize with state-based adapter for dynamic switching
-        BoardAdapter adapter = new StateScoreboardAdapter();
+        // Initialize with configurable adapter for dynamic customization
+        ScoreboardConfig scoreboardConfig = new ScoreboardConfig(plugin);
+        BoardAdapter adapter = new ConfigurableScoreboardAdapter(scoreboardConfig);
         
-        // Use 4 tick update interval for better performance (5 updates per second)
+        // Use configurable update interval for better performance
+        int updateInterval = scoreboardConfig.getUpdateInterval();
+        
         // For Folia compatibility, use the new optimized FoliaBoardManager
-        this.boardManager = new rip.thecraft.practice.util.scoreboard.FoliaBoardManager(adapter, 4);
+        this.boardManager = new rip.thecraft.practice.util.scoreboard.FoliaBoardManager(adapter, updateInterval);
     }
 
     /**

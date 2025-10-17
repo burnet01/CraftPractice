@@ -13,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rip.thecraft.practice.Practice;
+import rip.thecraft.practice.util.VersionUtils;
 
 import java.util.*;
 
@@ -49,7 +50,7 @@ public class SettingsManager implements Listener {
 
         // Scoreboard Toggle (Slot 13)
         ItemStack scoreboardItem = createToggleItem(
-            Material.OAK_SIGN,
+            VersionUtils.getMaterial("OAK_SIGN"),
             "&bScoreboard",
             settings.isScoreboardEnabled(),
             "&7Toggle scoreboard display",
@@ -60,7 +61,7 @@ public class SettingsManager implements Listener {
 
         // Toggle Messages (Slot 15)
         ItemStack messagesItem = createToggleItem(
-            Material.PAPER,
+            VersionUtils.getMaterial("PAPER"),
             "&eToggle Messages",
             settings.isMessagesEnabled(),
             "&7Toggle practice-related messages",
@@ -71,7 +72,7 @@ public class SettingsManager implements Listener {
 
         // Close button (Slot 22)
         ItemStack closeItem = createItem(
-            Material.BARRIER,
+            VersionUtils.getMaterial("BARRIER"),
             "&cClose",
             "&7Click to close this menu"
         );
@@ -109,7 +110,7 @@ public class SettingsManager implements Listener {
      * Creates a world time cycle item
      */
     private ItemStack createWorldTimeItem(WorldTimeOption currentTime) {
-        ItemStack item = new ItemStack(Material.CLOCK);
+        ItemStack item = new ItemStack(VersionUtils.getMaterial("CLOCK"));
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {

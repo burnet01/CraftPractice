@@ -19,7 +19,7 @@ import java.util.UUID;
 public class StateScoreboardManager {
 
     private final Practice plugin;
-    private final StateScoreboardAdapter stateAdapter;
+    private final ConfigurableScoreboardAdapter stateAdapter;
     
     // Cache for frequently accessed data to reduce lookups
     private final Map<UUID, Long> lastStateChange = new HashMap<>();
@@ -27,14 +27,16 @@ public class StateScoreboardManager {
 
     public StateScoreboardManager(Practice plugin) {
         this.plugin = plugin;
-        this.stateAdapter = new StateScoreboardAdapter();
+        // Use the new configurable adapter instead of the old state adapter
+        ScoreboardConfig scoreboardConfig = new ScoreboardConfig(plugin);
+        this.stateAdapter = new ConfigurableScoreboardAdapter(scoreboardConfig);
     }
 
     /**
      * Get the appropriate scoreboard adapter for a player's current state
      */
     public BoardAdapter getAdapterForPlayer(Player player) {
-        // Always use the state-based adapter for dynamic content
+        // Always use the configurable adapter for dynamic content
         return stateAdapter;
     }
 

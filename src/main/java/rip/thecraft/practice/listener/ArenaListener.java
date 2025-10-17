@@ -3,6 +3,7 @@ package rip.thecraft.practice.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.match.Match;
 import rip.thecraft.practice.player.PlayerState;
+import rip.thecraft.practice.util.VersionUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -327,8 +329,8 @@ public class ArenaListener implements Listener {
         org.bukkit.inventory.Inventory gui = org.bukkit.Bukkit.createInventory(null, 27, "Queue Selection: " + kitName);
         
         // Add queue type options
-        org.bukkit.inventory.ItemStack unrankedItem = createQueueItem("§aUnranked", "§7Play for fun, no ELO changes", org.bukkit.Material.GREEN_WOOL);
-        org.bukkit.inventory.ItemStack rankedItem = createQueueItem("§cRanked", "§7Play for ELO and ranking", org.bukkit.Material.RED_WOOL);
+        org.bukkit.inventory.ItemStack unrankedItem = createQueueItem("§aUnranked", "§7Play for fun, no ELO changes", VersionUtils.getMaterial("GREEN_WOOL"));
+        org.bukkit.inventory.ItemStack rankedItem = createQueueItem("§cRanked", "§7Play for ELO and ranking", VersionUtils.getMaterial("RED_WOOL"));
         
         gui.setItem(11, unrankedItem);
         gui.setItem(15, rankedItem);

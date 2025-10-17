@@ -47,6 +47,9 @@ public class Practice extends JavaPlugin {
 
         // Load configuration
         saveDefaultConfig();
+        
+        // Save scoreboard configuration only if it doesn't exist (don't overwrite)
+        saveResource("scoreboard.yml", false);
 
         // Initialize MongoDB connection
         initializeMongoDB();

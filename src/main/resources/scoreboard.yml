@@ -1,0 +1,155 @@
+# CraftPractice Scoreboard Configuration
+# This file allows complete customization of scoreboard appearance and animations
+
+# Global scoreboard settings
+global:
+  # Update interval in ticks (20 ticks = 1 second)
+  update-interval: 4
+  
+  # Animation speed in ticks
+  animation-speed: 10
+  
+  # Enable/disable scoreboard animations
+  animations-enabled: true
+
+# Scoreboard templates for different player states
+scoreboards:
+  
+  # Lobby scoreboard
+  lobby:
+    title:
+      # Static title or animated title
+      type: "animated" # "static" or "animated"
+      
+      # For static titles
+      static: "&6&lCraftPractice"
+      
+      # For animated titles
+      animated:
+        frames:
+          - "&#9D1BFF&lC&#9706FF&lr&#9D1BFF&la&#A430FF&lf&#AA45FF&lt&#B15AFF&lP&#B76FFF&lr&#BE84FF&la&#C499FF&lc&#BE84FF&lt&#B76FFF&li&#B15AFF&lc&#AA45FF&le"
+          - "&#A430FF&lC&#9D1BFF&lr&#9706FF&la&#9D1BFF&lt&#A430FF&lP&#AA45FF&lr&#B15AFF&la&#B76FFF&lc&#BE84FF&lt&#C499FF&li&#BE84FF&lc&#B76FFF&le"
+          - "&#AA45FF&lC&#A430FF&lr&#9D1BFF&la&#9706FF&lt&#9D1BFF&lP&#A430FF&lr&#AA45FF&la&#B15AFF&lc&#B76FFF&lt&#BE84FF&li&#C499FF&lc&#BE84FF&le"
+          - "&#B15AFF&lC&#AA45FF&lr&#A430FF&la&#9D1BFF&lt&#9706FF&lP&#9D1BFF&lr&#A430FF&la&#AA45FF&lc&#B15AFF&lt&#B76FFF&li&#BE84FF&lc&#C499FF&le"
+        speed: 2 # Frames per animation cycle
+    
+    lines:
+      - "&7&m----------------------"
+      - "&fLeaderboard: &6#{leaderboard_position}"
+      - ""
+      - "&fOnline: &b{online_players}"
+      - "&fIn Queue: &b{queue_players}"
+      - "&fIn Match: &b{match_players}"
+      - ""
+      - "&7&m----------------------"
+    
+    # Animation effects for lines (optional)
+    animations:
+      # Example: pulse animation for leaderboard line
+      leaderboard:
+        type: "pulse"
+        frames:
+          - "&fLeaderboard: &6#{leaderboard_position}"
+          - "&eLeaderboard: &6#{leaderboard_position}"
+        speed: 10
+
+  # Queue scoreboard
+  queue:
+    title:
+      type: "static"
+      static: "&6&lQueue"
+    
+    lines:
+      - "&7&m----------------------"
+      - "&fKit: &e{kit_name}"
+      - "&fType: &a{queue_type}"
+      - "&fWait: &b{wait_time}"
+      - ""
+      - "&eWaiting for opponent..."
+      - "&7&m----------------------"
+
+  # Match scoreboard
+  match:
+    title:
+      type: "static"
+      static: "&6&lMatch"
+    
+    lines:
+      - "&7&m----------------------"
+      - "&fKit: &e{kit_name}"
+      - "&fType: &a{match_type}"
+      - "&fDuration: &b{duration}"
+      - ""
+      - "&fOpponent: &c{opponent_name}"
+      - "&fOpponent ELO: &c{opponent_elo}"
+      - "&fYour ELO: &e{player_elo}"
+      - "&7&m----------------------"
+
+  # Spectating scoreboard
+  spectating:
+    title:
+      type: "static"
+      static: "&6&lSpectating"
+    
+    lines:
+      - "&7&m----------------------"
+      - "&fSpectating Match"
+      - ""
+      - "&fKit: &e{kit_name}"
+      - "&fType: &a{match_type}"
+      - "&fDuration: &b{duration}"
+      - ""
+      - "&f{player1_name}: &c{player1_elo}"
+      - "&f{player2_name}: &c{player2_elo}"
+      - ""
+      - "&eUse &a/spec &eto leave"
+      - "&7&m----------------------"
+
+  # Default scoreboard (fallback)
+  default:
+    title:
+      type: "static"
+      static: "&6&lCraftPractice"
+    
+    lines:
+      - "&7&m----------------------"
+      - "&fWelcome to Practice"
+      - ""
+      - "&fOnline: &b{online_players}"
+      - "&fLeaderboard: &6#{leaderboard_position}"
+      - ""
+      - "&7&m----------------------"
+
+# Placeholder definitions
+placeholders:
+  # Player-specific placeholders
+  player:
+    - "{player_name}"
+    - "{player_elo}"
+    - "{leaderboard_position}"
+  
+  # Server placeholders
+  server:
+    - "{online_players}"
+    - "{queue_players}"
+    - "{match_players}"
+  
+  # Queue placeholders
+  queue:
+    - "{kit_name}"
+    - "{queue_type}"
+    - "{queue_position}"
+    - "{queue_size}"
+    - "{wait_time}"
+  
+  # Match placeholders
+  match:
+    - "{kit_name}"
+    - "{match_type}"
+    - "{duration}"
+    - "{opponent_name}"
+    - "{opponent_elo}"
+    - "{player1_name}"
+    - "{player2_name}"
+    - "{player1_elo}"
+    - "{player2_elo}"

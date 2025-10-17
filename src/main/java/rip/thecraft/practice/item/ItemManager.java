@@ -13,6 +13,7 @@ import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.player.PlayerData;
 import rip.thecraft.practice.player.PlayerState;
 import rip.thecraft.practice.queue.QueueType;
+import rip.thecraft.practice.util.VersionUtils;
 
 import java.util.Arrays;
 
@@ -86,7 +87,7 @@ public class ItemManager implements Listener {
     private void giveQueueItems(Player player) {
         // Red dye for leaving queue (slot 4 - middle of hotbar)
         ItemStack leaveQueueItem = createItem(
-            Material.RED_DYE,
+            VersionUtils.getMaterial("RED_DYE"),
             ChatColor.RED + "Leave Queue",
             ChatColor.GRAY + "Right-click to leave the queue",
             ChatColor.GRAY + "Use /queue leave"
@@ -102,7 +103,7 @@ public class ItemManager implements Listener {
     private void giveSpectatorItems(Player player) {
         // Red dye for leaving spectator mode
         ItemStack leaveSpectatorItem = createItem(
-            Material.RED_DYE,
+            VersionUtils.getMaterial("RED_DYE"),
             ChatColor.RED + "Leave Spectator",
             ChatColor.GRAY + "Right-click to stop spectating",
             ChatColor.GRAY + "Use /spec leave"
@@ -151,7 +152,7 @@ public class ItemManager implements Listener {
         }
 
         // Check for leave queue item
-        if (item.getType() == Material.RED_DYE) {
+        if (item.getType() == VersionUtils.getMaterial("RED_DYE")) {
             event.setCancelled(true);
             
             switch (playerData.getState()) {

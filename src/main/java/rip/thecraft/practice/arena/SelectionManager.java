@@ -1,6 +1,7 @@
 package rip.thecraft.practice.arena;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,6 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import rip.thecraft.practice.Practice;
+import rip.thecraft.practice.util.VersionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +95,7 @@ public class SelectionManager implements Listener {
     private boolean isSelectionTool(Player player) {
         // Check if player has permission and is holding a stick (selection tool)
         return player.hasPermission("practice.admin") && 
-               player.getInventory().getItemInMainHand().getType() == org.bukkit.Material.STICK;
+               VersionUtils.getItemInMainHand(player).getType() == Material.STICK;
     }
     
     public void giveSelectionTool(Player player) {
