@@ -279,6 +279,17 @@ practice.*
 └── practice.user
 ```
 
+## Building
+
+**Requirements**: 
+  1. Maven
+  2. JDK 17+ (Higher is better (21-24), current Compiler target is 17 though, may change in the future)
+  3. Preferably using an IDE (IntelliJ IDEA is what I use)
+```bash
+# Clean install
+mvn clean install
+```
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
