@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
+import rip.thecraft.practice.util.MessageManager;
 
 /**
  * Command executor for the settings command
@@ -16,7 +17,7 @@ public class SettingsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -31,16 +32,16 @@ public class SettingsCommand implements CommandExecutor {
         if (args[0].toLowerCase().equals("help")) {
             sendHelp(player);
         } else {
-            player.sendMessage(ChatColor.RED + "Unknown subcommand. Use /settings help for help.");
+            MessageManager.getInstance().sendMessage(player, "settings.subcommand.unknown");
         }
 
         return true;
     }
 
     private void sendHelp(Player player) {
-        player.sendMessage(ChatColor.GOLD + "=== Settings Commands ===");
-        player.sendMessage(ChatColor.YELLOW + "/settings" + ChatColor.WHITE + " - Open settings GUI");
-        player.sendMessage(ChatColor.YELLOW + "/settings help" + ChatColor.WHITE + " - Show this help");
-        player.sendMessage(ChatColor.GRAY + "You can also use the settings book in your inventory!");
+        MessageManager.getInstance().sendMessage(player, "settings.help.header");
+        MessageManager.getInstance().sendMessage(player, "settings.help.open");
+        MessageManager.getInstance().sendMessage(player, "settings.help.help");
+        MessageManager.getInstance().sendMessage(player, "settings.help.book");
     }
 }

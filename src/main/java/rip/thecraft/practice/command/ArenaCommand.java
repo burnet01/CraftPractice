@@ -1,6 +1,6 @@
 package rip.thecraft.practice.command;
 
-import org.bukkit.ChatColor;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,13 +8,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.arena.SelectionManager;
+import rip.thecraft.practice.util.MessageManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ArenaCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -63,7 +67,9 @@ public class ArenaCommand implements CommandExecutor {
 
     private void createArena(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /arena create <name>");
+            Map<String, String> usagePlaceholders = new HashMap<>();
+            usagePlaceholders.put("usage", "/arena create <name>");
+            MessageManager.getInstance().sendMessage(player, "arena.create.usage", usagePlaceholders);
             return;
         }
 
@@ -72,16 +78,25 @@ public class ArenaCommand implements CommandExecutor {
         Location spawn2 = player.getLocation().add(10, 0, 0); // Default second spawn
 
         if (Practice.getInstance().getArenaManager().createArena(name, spawn1, spawn2)) {
-            player.sendMessage(ChatColor.GREEN + "Arena '" + name + "' created!");
-            player.sendMessage(ChatColor.YELLOW + "Now set the bounds with /arena setbounds " + name + " and second spawn with /arena setspawn " + name + " 2");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.create.success", successPlaceholders);
+            
+            Map<String, String> instructionsPlaceholders = new HashMap<>();
+            instructionsPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.create.instructions", instructionsPlaceholders);
         } else {
-            player.sendMessage(ChatColor.RED + "An arena with that name already exists!");
+            Map<String, String> errorPlaceholders = new HashMap<>();
+            errorPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.create.exists", errorPlaceholders);
         }
     }
 
     private void setSpawn(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage(ChatColor.RED + "Usage: /arena setspawn <name> <1|2>");
+            Map<String, String> usagePlaceholders = new HashMap<>();
+            usagePlaceholders.put("usage", "/arena setspawn <name> <1|2>");
+            MessageManager.getInstance().sendMessage(player, "arena.setspawn.usage", usagePlaceholders);
             return;
         }
 
@@ -90,7 +105,9 @@ public class ArenaCommand implements CommandExecutor {
         var arena = Practice.getInstance().getArenaManager().getArena(name);
 
         if (arena == null) {
-            player.sendMessage(ChatColor.RED + "Arena not found!");
+            Map<String, String> errorPlaceholders = new HashMap<>();
+            errorPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.notfound", errorPlaceholders);
             return;
         }
 
@@ -99,12 +116,18 @@ public class ArenaCommand implements CommandExecutor {
         // Update spawn location in arena
         if (spawnNumber.equals("1")) {
             arena.setSpawn1(spawn);
-            player.sendMessage(ChatColor.GREEN + "Spawn 1 set for arena '" + name + "'!");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", name);
+            successPlaceholders.put("spawn", "1");
+            MessageManager.getInstance().sendMessage(player, "arena.setspawn.success", successPlaceholders);
         } else if (spawnNumber.equals("2")) {
             arena.setSpawn2(spawn);
-            player.sendMessage(ChatColor.GREEN + "Spawn 2 set for arena '" + name + "'!");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", name);
+            successPlaceholders.put("spawn", "2");
+            MessageManager.getInstance().sendMessage(player, "arena.setspawn.success", successPlaceholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Invalid spawn number! Use 1 or 2.");
+            MessageManager.getInstance().sendMessage(player, "arena.setspawn.invalid");
             return;
         }
         
@@ -114,11 +137,10 @@ public class ArenaCommand implements CommandExecutor {
 
     private void setBounds(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /arena setbounds <name>");
-            player.sendMessage(ChatColor.YELLOW + "Use a stick to select positions:");
-            player.sendMessage(ChatColor.YELLOW + "- Left-click: Set position 1");
-            player.sendMessage(ChatColor.YELLOW + "- Right-click: Set position 2");
-            player.sendMessage(ChatColor.YELLOW + "Then use this command to apply the selection.");
+            Map<String, String> usagePlaceholders = new HashMap<>();
+            usagePlaceholders.put("usage", "/arena setbounds <name>");
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.usage", usagePlaceholders);
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.instructions");
             return;
         }
 
@@ -126,7 +148,9 @@ public class ArenaCommand implements CommandExecutor {
         var arena = Practice.getInstance().getArenaManager().getArena(name);
 
         if (arena == null) {
-            player.sendMessage(ChatColor.RED + "Arena not found!");
+            Map<String, String> errorPlaceholders = new HashMap<>();
+            errorPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.notfound", errorPlaceholders);
             return;
         }
 
@@ -134,28 +158,42 @@ public class ArenaCommand implements CommandExecutor {
         var selectionManager = SelectionManager.getInstance();
         
         if (!selectionManager.hasBothPositions(player)) {
-            player.sendMessage(ChatColor.RED + "You need to select both positions first!");
-            player.sendMessage(ChatColor.YELLOW + "Use a stick to select positions:");
-            player.sendMessage(ChatColor.YELLOW + "- Left-click: Set position 1");
-            player.sendMessage(ChatColor.YELLOW + "- Right-click: Set position 2");
-            player.sendMessage(ChatColor.YELLOW + "Get the selection tool with /arena tool");
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.noselection");
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.instructions");
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.tool");
             return;
         }
 
         Location pos1 = selectionManager.getPos1(player);
         Location pos2 = selectionManager.getPos2(player);
 
-        player.sendMessage(ChatColor.YELLOW + "Setting bounds for arena '" + name + "'...");
-        player.sendMessage(ChatColor.YELLOW + "Position 1: " + formatLocation(pos1));
-        player.sendMessage(ChatColor.YELLOW + "Position 2: " + formatLocation(pos2));
+        Map<String, String> progressPlaceholders = new HashMap<>();
+        progressPlaceholders.put("arena", name);
+        MessageManager.getInstance().sendMessage(player, "arena.setbounds.progress", progressPlaceholders);
+        
+        Map<String, String> pos1Placeholders = new HashMap<>();
+        pos1Placeholders.put("position", "1");
+        pos1Placeholders.put("location", formatLocation(pos1));
+        MessageManager.getInstance().sendMessage(player, "arena.setbounds.position", pos1Placeholders);
+        
+        Map<String, String> pos2Placeholders = new HashMap<>();
+        pos2Placeholders.put("position", "2");
+        pos2Placeholders.put("location", formatLocation(pos2));
+        MessageManager.getInstance().sendMessage(player, "arena.setbounds.position", pos2Placeholders);
 
         if (Practice.getInstance().getArenaManager().setArenaBounds(name, pos1, pos2)) {
-            player.sendMessage(ChatColor.GREEN + "Bounds set for arena '" + name + "'!");
-            player.sendMessage(ChatColor.YELLOW + "Area: " + calculateVolume(pos1, pos2) + " blocks");
-            player.sendMessage(ChatColor.YELLOW + "This area will be regenerated after each match.");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.success", successPlaceholders);
+            
+            Map<String, String> areaPlaceholders = new HashMap<>();
+            areaPlaceholders.put("area", calculateVolume(pos1, pos2));
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.area", areaPlaceholders);
+            
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.regeneration");
             selectionManager.clearSelection(player);
         } else {
-            player.sendMessage(ChatColor.RED + "Failed to set bounds!");
+            MessageManager.getInstance().sendMessage(player, "arena.setbounds.failed");
         }
     }
 
@@ -174,43 +212,55 @@ public class ArenaCommand implements CommandExecutor {
     private void listArenas(Player player) {
         var arenas = Practice.getInstance().getArenaManager().getArenaNames();
         if (arenas.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "No arenas configured.");
+            MessageManager.getInstance().sendMessage(player, "arena.list.empty");
             return;
         }
 
-        player.sendMessage(ChatColor.GOLD + "=== Arenas ===");
+        MessageManager.getInstance().sendMessage(player, "arena.list.header");
         for (String name : arenas) {
             var arena = Practice.getInstance().getArenaManager().getArena(name);
-            String status;
+            String statusKey;
             if (!arena.isSetupComplete()) {
-                status = ChatColor.YELLOW + "Setup Incomplete";
+                statusKey = "arena.list.status.incomplete";
             } else if (arena.isAvailable()) {
-                status = ChatColor.GREEN + "Available";
+                statusKey = "arena.list.status.available";
             } else {
-                status = ChatColor.RED + "In Use";
+                statusKey = "arena.list.status.inuse";
             }
-            player.sendMessage(ChatColor.YELLOW + "- " + name + " " + status);
+            
+            Map<String, String> arenaPlaceholders = new HashMap<>();
+            arenaPlaceholders.put("arena", name);
+            arenaPlaceholders.put("status", MessageManager.getInstance().getMessage(statusKey));
+            MessageManager.getInstance().sendMessage(player, "arena.list.entry", arenaPlaceholders);
         }
     }
 
     private void deleteArena(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /arena delete <name>");
+            Map<String, String> usagePlaceholders = new HashMap<>();
+            usagePlaceholders.put("usage", "/arena delete <name>");
+            MessageManager.getInstance().sendMessage(player, "arena.delete.usage", usagePlaceholders);
             return;
         }
 
         String name = args[1];
         if (Practice.getInstance().getArenaManager().deleteArena(name)) {
-            player.sendMessage(ChatColor.GREEN + "Arena '" + name + "' deleted!");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.delete.success", successPlaceholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Arena not found!");
+            Map<String, String> errorPlaceholders = new HashMap<>();
+            errorPlaceholders.put("arena", name);
+            MessageManager.getInstance().sendMessage(player, "arena.notfound", errorPlaceholders);
         }
     }
 
     private void setArenaOnlyKit(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage(ChatColor.RED + "Usage: /arena onlykit <arenaname> <kitname>");
-            player.sendMessage(ChatColor.YELLOW + "Use 'none' as kitname to remove restriction");
+            Map<String, String> usagePlaceholders = new HashMap<>();
+            usagePlaceholders.put("usage", "/arena onlykit <arenaname> <kitname>");
+            MessageManager.getInstance().sendMessage(player, "arena.onlykit.usage", usagePlaceholders);
+            MessageManager.getInstance().sendMessage(player, "arena.onlykit.none");
             return;
         }
 
@@ -219,38 +269,49 @@ public class ArenaCommand implements CommandExecutor {
         var arena = Practice.getInstance().getArenaManager().getArena(arenaName);
 
         if (arena == null) {
-            player.sendMessage(ChatColor.RED + "Arena not found!");
+            Map<String, String> errorPlaceholders = new HashMap<>();
+            errorPlaceholders.put("arena", arenaName);
+            MessageManager.getInstance().sendMessage(player, "arena.notfound", errorPlaceholders);
             return;
         }
 
         if (kitName.equalsIgnoreCase("none")) {
             if (Practice.getInstance().getArenaManager().removeArenaRestrictedKit(arenaName)) {
-                player.sendMessage(ChatColor.GREEN + "Kit restriction removed from arena '" + arenaName + "'!");
-                player.sendMessage(ChatColor.YELLOW + "This arena can now be used by any kit.");
+                Map<String, String> successPlaceholders = new HashMap<>();
+                successPlaceholders.put("arena", arenaName);
+                MessageManager.getInstance().sendMessage(player, "arena.onlykit.remove.success", successPlaceholders);
+                MessageManager.getInstance().sendMessage(player, "arena.onlykit.remove.info");
             } else {
-                player.sendMessage(ChatColor.RED + "Failed to remove kit restriction!");
+                MessageManager.getInstance().sendMessage(player, "arena.onlykit.remove.failed");
             }
         } else {
             // Check if kit exists
             var kit = Practice.getInstance().getKitManager().getKit(kitName);
             if (kit == null) {
-                player.sendMessage(ChatColor.RED + "Kit '" + kitName + "' not found!");
+                Map<String, String> errorPlaceholders = new HashMap<>();
+                errorPlaceholders.put("kit", kitName);
+                MessageManager.getInstance().sendMessage(player, "kit.notfound", errorPlaceholders);
                 return;
             }
 
             if (Practice.getInstance().getArenaManager().setArenaRestrictedKit(arenaName, kitName)) {
-                player.sendMessage(ChatColor.GREEN + "Arena '" + arenaName + "' now restricted to kit '" + kitName + "'!");
-                player.sendMessage(ChatColor.YELLOW + "This kit can only be used in this arena and other arenas tagged with this kit.");
+                Map<String, String> successPlaceholders = new HashMap<>();
+                successPlaceholders.put("arena", arenaName);
+                successPlaceholders.put("kit", kitName);
+                MessageManager.getInstance().sendMessage(player, "arena.onlykit.set.success", successPlaceholders);
+                MessageManager.getInstance().sendMessage(player, "arena.onlykit.set.info");
             } else {
-                player.sendMessage(ChatColor.RED + "Failed to set kit restriction!");
+                MessageManager.getInstance().sendMessage(player, "arena.onlykit.set.failed");
             }
         }
     }
 
     private void setArenaBuild(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /arena build <arenaname>");
-            player.sendMessage(ChatColor.YELLOW + "This arena will be restricted to build kits only and can only be used one match at a time.");
+            Map<String, String> usagePlaceholders = new HashMap<>();
+            usagePlaceholders.put("usage", "/arena build <arenaname>");
+            MessageManager.getInstance().sendMessage(player, "arena.build.usage", usagePlaceholders);
+            MessageManager.getInstance().sendMessage(player, "arena.build.info");
             return;
         }
 
@@ -258,7 +319,9 @@ public class ArenaCommand implements CommandExecutor {
         var arena = Practice.getInstance().getArenaManager().getArena(arenaName);
 
         if (arena == null) {
-            player.sendMessage(ChatColor.RED + "Arena not found!");
+            Map<String, String> errorPlaceholders = new HashMap<>();
+            errorPlaceholders.put("arena", arenaName);
+            MessageManager.getInstance().sendMessage(player, "arena.notfound", errorPlaceholders);
             return;
         }
 
@@ -270,31 +333,35 @@ public class ArenaCommand implements CommandExecutor {
         Practice.getInstance().getArenaManager().saveArenas();
 
         if (newBuildArenaStatus) {
-            player.sendMessage(ChatColor.GREEN + "Arena '" + arenaName + "' is now a build arena!");
-            player.sendMessage(ChatColor.YELLOW + "This arena can only be used by build kits and only one match at a time.");
-            player.sendMessage(ChatColor.YELLOW + "The arena will be regenerated after each match.");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", arenaName);
+            MessageManager.getInstance().sendMessage(player, "arena.build.enabled", successPlaceholders);
+            MessageManager.getInstance().sendMessage(player, "arena.build.enabled.info");
+            MessageManager.getInstance().sendMessage(player, "arena.build.regeneration");
         } else {
-            player.sendMessage(ChatColor.GREEN + "Arena '" + arenaName + "' is no longer a build arena.");
-            player.sendMessage(ChatColor.YELLOW + "This arena can now be used by any kit and multiple matches.");
+            Map<String, String> successPlaceholders = new HashMap<>();
+            successPlaceholders.put("arena", arenaName);
+            MessageManager.getInstance().sendMessage(player, "arena.build.disabled", successPlaceholders);
+            MessageManager.getInstance().sendMessage(player, "arena.build.disabled.info");
         }
     }
 
     private void sendHelp(Player player) {
-        player.sendMessage(ChatColor.GOLD + "=== Arena Commands ===");
-        player.sendMessage(ChatColor.YELLOW + "/arena create <name>" + ChatColor.WHITE + " - Create new arena");
-        player.sendMessage(ChatColor.YELLOW + "/arena setspawn <name> <1|2>" + ChatColor.WHITE + " - Set spawn point");
-        player.sendMessage(ChatColor.YELLOW + "/arena setbounds <name>" + ChatColor.WHITE + " - Set arena bounds");
-        player.sendMessage(ChatColor.YELLOW + "/arena onlykit <arenaname> <kitname>" + ChatColor.WHITE + " - Restrict arena to specific kit");
-        player.sendMessage(ChatColor.YELLOW + "/arena build <arenaname>" + ChatColor.WHITE + " - Mark arena for build kits only (one match at a time)");
-        player.sendMessage(ChatColor.YELLOW + "/arena list" + ChatColor.WHITE + " - List all arenas");
-        player.sendMessage(ChatColor.YELLOW + "/arena delete <name>" + ChatColor.WHITE + " - Delete arena");
-        player.sendMessage(ChatColor.YELLOW + "/arena tool" + ChatColor.WHITE + " - Get arena selection tool");
-        player.sendMessage(ChatColor.YELLOW + "/arena world" + ChatColor.WHITE + " - Teleport to arena world");
+        MessageManager.getInstance().sendMessage(player, "arena.help.header");
+        MessageManager.getInstance().sendMessage(player, "arena.help.create");
+        MessageManager.getInstance().sendMessage(player, "arena.help.setspawn");
+        MessageManager.getInstance().sendMessage(player, "arena.help.setbounds");
+        MessageManager.getInstance().sendMessage(player, "arena.help.onlykit");
+        MessageManager.getInstance().sendMessage(player, "arena.help.build");
+        MessageManager.getInstance().sendMessage(player, "arena.help.list");
+        MessageManager.getInstance().sendMessage(player, "arena.help.delete");
+        MessageManager.getInstance().sendMessage(player, "arena.help.tool");
+        MessageManager.getInstance().sendMessage(player, "arena.help.world");
     }
 
     private void giveSelectionTool(Player player) {
         if (!player.hasPermission("practice.admin")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
+            MessageManager.getInstance().sendNoPermission(player);
             return;
         }
         
@@ -303,17 +370,17 @@ public class ArenaCommand implements CommandExecutor {
 
     private void teleportToArenaWorld(Player player) {
         if (!player.hasPermission("practice.admin")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
+            MessageManager.getInstance().sendNoPermission(player);
             return;
         }
         
         // World manager temporarily disabled due to initialization issues
-        player.sendMessage(ChatColor.RED + "Arena world feature is temporarily disabled. Check console for details.");
+        MessageManager.getInstance().sendMessage(player, "arena.world.disabled");
         /*
         if (Practice.getInstance().getWorldManager().teleportToArenaWorld(player)) {
             // Success message is sent by the world manager
         } else {
-            player.sendMessage(ChatColor.RED + "Failed to teleport to arena world!");
+            MessageManager.getInstance().sendMessage(player, "arena.world.failed");
         }
         */
     }

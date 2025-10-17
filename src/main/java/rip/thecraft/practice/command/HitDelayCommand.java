@@ -9,6 +9,10 @@ import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.hitdelay.HitDelayProfile;
 import rip.thecraft.practice.kit.Kit;
 import rip.thecraft.practice.match.Match;
+import rip.thecraft.practice.util.MessageManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HitDelayCommand implements CommandExecutor {
 
@@ -52,9 +56,9 @@ public class HitDelayCommand implements CommandExecutor {
 
     private void createProfile(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: /hd create <profile> <delay>");
-            sender.sendMessage(ChatColor.GRAY + "Example: /hd create classic 500");
-            sender.sendMessage(ChatColor.GRAY + "Delay is in milliseconds (1000ms = 1 second)");
+            MessageManager.getInstance().sendMessage(sender, "hitdelay.create.usage");
+            MessageManager.getInstance().sendMessage(sender, "hitdelay.create.example");
+            MessageManager.getInstance().sendMessage(sender, "hitdelay.create.delay-info");
             return;
         }
 
@@ -64,15 +68,19 @@ public class HitDelayCommand implements CommandExecutor {
             long delay = Long.parseLong(args[2]);
             
             if (delay < 0) {
-                sender.sendMessage(ChatColor.RED + "Delay cannot be negative!");
+                MessageManager.getInstance().sendMessage(sender, "hitdelay.delay.negative");
                 return;
             }
 
             HitDelayProfile profile = new HitDelayProfile(name, delay);
             Practice.getInstance().getHitDelayManager().addProfile(profile);
-            sender.sendMessage(ChatColor.GREEN + "Hit delay profile '" + name + "' created successfully with " + delay + "ms delay!");
+            
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("profile", name);
+            placeholders.put("delay", String.valueOf(delay));
+            MessageManager.getInstance().sendMessage(sender, "hitdelay.create.success", placeholders);
         } catch (NumberFormatException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid delay format! Please use a valid number.");
+            MessageManager.getInstance().sendMessage(sender, "hitdelay.delay.invalid");
         }
     }
 

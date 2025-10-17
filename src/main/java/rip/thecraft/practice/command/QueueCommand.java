@@ -1,19 +1,22 @@
 package rip.thecraft.practice.command;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.queue.QueueType;
+import rip.thecraft.practice.util.MessageManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class QueueCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -44,7 +47,9 @@ public class QueueCommand implements CommandExecutor {
 
     private void joinQueue(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage(ChatColor.RED + "Usage: /queue join <kit> <unranked|ranked>");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("usage", "/queue join <kit> <unranked|ranked>");
+            MessageManager.getInstance().sendMessage(player, "queue.join.invalid-usage", placeholders);
             return;
         }
 
@@ -55,7 +60,7 @@ public class QueueCommand implements CommandExecutor {
         try {
             type = QueueType.valueOf(queueType);
         } catch (IllegalArgumentException e) {
-            player.sendMessage(ChatColor.RED + "Invalid queue type! Use 'unranked' or 'ranked'.");
+            MessageManager.getInstance().sendMessage(player, "queue.join.invalid-type");
             return;
         }
 
@@ -63,7 +68,7 @@ public class QueueCommand implements CommandExecutor {
             // Message is handled inside joinQueue method with settings check
         } else {
             if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.RED + "Failed to join queue! You might already be in a queue or the kit doesn't exist.");
+                MessageManager.getInstance().sendMessage(player, "queue.join.failed");
             }
         }
     }
@@ -73,7 +78,7 @@ public class QueueCommand implements CommandExecutor {
             // Message is handled inside leaveQueue method with settings check
         } else {
             if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.RED + "You are not in a queue!");
+                MessageManager.getInstance().sendMessage(player, "queue.leave.not-in-queue");
             }
         }
     }
@@ -82,31 +87,39 @@ public class QueueCommand implements CommandExecutor {
         var queueEntry = Practice.getInstance().getQueueManager().getPlayerQueue(player.getUniqueId());
         if (queueEntry == null) {
             if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.YELLOW + "You are not in a queue.");
+                MessageManager.getInstance().sendMessage(player, "queue.status.not-in-queue");
             }
             return;
         }
 
         if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-            player.sendMessage(ChatColor.GOLD + "=== Queue Status ===");
-            player.sendMessage(ChatColor.YELLOW + "Kit: " + ChatColor.WHITE + queueEntry.getKit().getName());
-            player.sendMessage(ChatColor.YELLOW + "Type: " + ChatColor.WHITE + queueEntry.getType().name().toLowerCase());
+            MessageManager.getInstance().sendMessage(player, "queue.status.header");
+            
+            Map<String, String> kitPlaceholders = new HashMap<>();
+            kitPlaceholders.put("kit", queueEntry.getKit().getName());
+            MessageManager.getInstance().sendMessage(player, "queue.status.kit", kitPlaceholders);
+            
+            Map<String, String> typePlaceholders = new HashMap<>();
+            typePlaceholders.put("type", queueEntry.getType().name().toLowerCase());
+            MessageManager.getInstance().sendMessage(player, "queue.status.type", typePlaceholders);
             
             // Show queue size
             var queues = Practice.getInstance().getQueueManager().getQueues();
             var queue = queues.get(queueEntry.getType()).get(queueEntry.getKit().getName().toLowerCase());
             if (queue != null) {
-                player.sendMessage(ChatColor.YELLOW + "Players in queue: " + ChatColor.WHITE + queue.getSize());
+                Map<String, String> sizePlaceholders = new HashMap<>();
+                sizePlaceholders.put("size", String.valueOf(queue.getSize()));
+                MessageManager.getInstance().sendMessage(player, "queue.status.players", sizePlaceholders);
             }
         }
     }
 
     private void sendHelp(Player player) {
         if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-            player.sendMessage(ChatColor.GOLD + "=== Queue Commands ===");
-            player.sendMessage(ChatColor.YELLOW + "/queue join <kit> <unranked|ranked>" + ChatColor.WHITE + " - Join a queue");
-            player.sendMessage(ChatColor.YELLOW + "/queue leave" + ChatColor.WHITE + " - Leave current queue");
-            player.sendMessage(ChatColor.YELLOW + "/queue status" + ChatColor.WHITE + " - Show queue status");
+            MessageManager.getInstance().sendMessage(player, "queue.help.header");
+            MessageManager.getInstance().sendMessage(player, "queue.help.join");
+            MessageManager.getInstance().sendMessage(player, "queue.help.leave");
+            MessageManager.getInstance().sendMessage(player, "queue.help.status");
         }
     }
 }

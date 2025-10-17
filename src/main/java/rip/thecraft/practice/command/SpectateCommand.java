@@ -13,7 +13,10 @@ import rip.thecraft.practice.player.PlayerData;
 import rip.thecraft.practice.player.PlayerState;
 import rip.thecraft.practice.tournament.Tournament;
 import rip.thecraft.practice.tournament.TournamentMatch;
+import rip.thecraft.practice.util.MessageManager;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class SpectateCommand implements CommandExecutor {
@@ -21,7 +24,7 @@ public class SpectateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -29,7 +32,7 @@ public class SpectateCommand implements CommandExecutor {
         PlayerData playerData = Practice.getInstance().getPlayerManager().getPlayerData(player);
         
         if (playerData == null) {
-            player.sendMessage(ChatColor.RED + "Failed to load your player data.");
+            MessageManager.getInstance().sendMessage(player, "spectate.playerdata.error");
             return true;
         }
 
@@ -41,7 +44,7 @@ public class SpectateCommand implements CommandExecutor {
 
         // Check if player is in a match or queue
         if (playerData.getState() != PlayerState.LOBBY) {
-            player.sendMessage(ChatColor.RED + "You cannot spectate while in a match or queue.");
+            MessageManager.getInstance().sendMessage(player, "spectate.state.invalid");
             return true;
         }
 
@@ -56,7 +59,9 @@ public class SpectateCommand implements CommandExecutor {
         Player target = Bukkit.getPlayer(targetName);
         
         if (target == null) {
-            player.sendMessage(ChatColor.RED + "Player '" + targetName + "' not found or is offline.");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", targetName);
+            MessageManager.getInstance().sendMessage(player, "spectate.player.notfound", placeholders);
             return true;
         }
 
@@ -64,7 +69,7 @@ public class SpectateCommand implements CommandExecutor {
         Match match = matchManager.getPlayerMatch(target.getUniqueId());
         
         if (match == null || !match.isStarted()) {
-            player.sendMessage(ChatColor.RED + "That player is not in an active match.");
+            MessageManager.getInstance().sendMessage(player, "spectate.match.inactive");
             return true;
         }
 
@@ -75,20 +80,20 @@ public class SpectateCommand implements CommandExecutor {
 
     private void showHelpAndActiveMatches(Player player) {
         // Show help message
-        player.sendMessage(ChatColor.GOLD + "=== Spectate Command ===");
-        player.sendMessage(ChatColor.YELLOW + "/spec <player>" + ChatColor.GRAY + " - Spectate a specific player's match");
-        player.sendMessage(ChatColor.YELLOW + "/spec" + ChatColor.GRAY + " - Stop spectating (while in spectator mode)");
-        player.sendMessage("");
+        MessageManager.getInstance().sendMessage(player, "spectate.help.header");
+        MessageManager.getInstance().sendMessage(player, "spectate.help.specify");
+        MessageManager.getInstance().sendMessage(player, "spectate.help.stop");
+        MessageManager.getInstance().sendMessage(player, "spectate.help.empty");
         
         MatchManager matchManager = Practice.getInstance().getMatchManager();
         var activeMatches = matchManager.getAllActiveMatches();
         
         if (activeMatches.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "There are no active matches to spectate.");
+            MessageManager.getInstance().sendMessage(player, "spectate.matches.none");
             return;
         }
 
-        player.sendMessage(ChatColor.GOLD + "=== Active Matches ===");
+        MessageManager.getInstance().sendMessage(player, "spectate.matches.header");
         for (Match match : activeMatches) {
             if (!match.isStarted()) continue;
             
@@ -99,11 +104,15 @@ public class SpectateCommand implements CommandExecutor {
                 String kitName = match.getKit() != null ? match.getKit().getName() : "Unknown";
                 String matchType = match.getType() != null ? match.getType().name() : "Unknown";
                 
-                player.sendMessage(ChatColor.YELLOW + "• " + player1.getName() + " vs " + player2.getName() + 
-                    ChatColor.GRAY + " - " + kitName + " (" + matchType + ")");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("player1", player1.getName());
+                placeholders.put("player2", player2.getName());
+                placeholders.put("kit", kitName);
+                placeholders.put("type", matchType);
+                MessageManager.getInstance().sendMessage(player, "spectate.matches.entry", placeholders);
             }
         }
-        player.sendMessage(ChatColor.GRAY + "Use /spec <player> to spectate a specific match.");
+        MessageManager.getInstance().sendMessage(player, "spectate.matches.footer");
     }
 
     private void startSpectate(Player spectator, PlayerData spectatorData, Match match, String[] args) {
@@ -111,7 +120,7 @@ public class SpectateCommand implements CommandExecutor {
         Player player2 = Bukkit.getPlayer(match.getPlayer2());
         
         if (player1 == null || player2 == null) {
-            spectator.sendMessage(ChatColor.RED + "One or both players in the match are no longer online.");
+            MessageManager.getInstance().sendMessage(spectator, "spectate.match.players.offline");
             return;
         }
 
@@ -157,8 +166,11 @@ public class SpectateCommand implements CommandExecutor {
         if (tournament != null) {
             matchInfo += " (Tournament)";
         }
-        spectator.sendMessage(ChatColor.GREEN + "You are now spectating " + matchInfo);
-        spectator.sendMessage(ChatColor.GRAY + "Use /spec again to stop spectating.");
+        
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("match", matchInfo);
+        MessageManager.getInstance().sendMessage(spectator, "spectate.started", placeholders);
+        MessageManager.getInstance().sendMessage(spectator, "spectate.stop.hint");
 
         // Update scoreboard
         Practice.getInstance().getScoreboardService().updatePlayerScoreboard(spectator);
@@ -199,11 +211,11 @@ public class SpectateCommand implements CommandExecutor {
         });
 
         // Send message
-        String message = ChatColor.YELLOW + "You are no longer spectating.";
         if (spectatingTournament != null) {
-            message += " (Tournament)";
+            MessageManager.getInstance().sendMessage(spectator, "spectate.stopped.tournament");
+        } else {
+            MessageManager.getInstance().sendMessage(spectator, "spectate.stopped");
         }
-        spectator.sendMessage(message);
 
         // Update scoreboard
         Practice.getInstance().getScoreboardService().updatePlayerScoreboard(spectator);

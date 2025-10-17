@@ -24,6 +24,62 @@ arena-already-exists: "&cArena &e%arena% &calready exists."
 arena-spawn-set: "&aSpawn point set for arena &e%arena%&a."
 arena-spawn-not-set: "&cSpawn point not set for arena &e%arena%&c."
 
+# Arena Command Detailed Messages
+arena.create.usage: "&cInvalid usage. Use: &e%usage%"
+arena.create.success: "&aArena &e%arena% &ahas been created successfully!"
+arena.create.instructions: "&7Use &e/arena setspawn %arena% 1 &7and &e/arena setspawn %arena% 2 &7to set spawn points."
+arena.create.exists: "&cArena &e%arena% &calready exists!"
+arena.setspawn.usage: "&cInvalid usage. Use: &e%usage%"
+arena.setspawn.success: "&aSpawn &e%spawn% &aset for arena &e%arena%&a!"
+arena.setspawn.invalid: "&cInvalid spawn number! Use 1 or 2."
+arena.setbounds.usage: "&cInvalid usage. Use: &e%usage%"
+arena.setbounds.instructions: "&7Use the selection tool to select an area, then run this command."
+arena.setbounds.noselection: "&cYou don't have a complete selection!"
+arena.setbounds.tool: "&7Use &e/arena tool &7to get the selection tool."
+arena.setbounds.progress: "&aSetting bounds for arena &e%arena%&a..."
+arena.setbounds.position: "&7Position &e%position%&7: &f%location%"
+arena.setbounds.success: "&aBounds set for arena &e%arena%&a!"
+arena.setbounds.area: "&7Area: &e%area% blocks"
+arena.setbounds.regeneration: "&7Arena will be regenerated automatically."
+arena.setbounds.failed: "&cFailed to set arena bounds!"
+arena.list.header: "&6&l=== Available Arenas ==="
+arena.list.empty: "&cNo arenas found!"
+arena.list.entry: "&e%arena% &7- %status%"
+arena.list.status.available: "&aAvailable"
+arena.list.status.inuse: "&cIn Use"
+arena.list.status.incomplete: "&6Incomplete"
+arena.delete.usage: "&cInvalid usage. Use: &e%usage%"
+arena.delete.success: "&aArena &e%arena% &ahas been deleted!"
+arena.onlykit.usage: "&cInvalid usage. Use: &e%usage%"
+arena.onlykit.none: "&7Use 'none' to remove kit restriction."
+arena.onlykit.remove.success: "&aKit restriction removed from arena &e%arena%&a!"
+arena.onlykit.remove.info: "&7Arena is now available for all kits."
+arena.onlykit.remove.failed: "&cFailed to remove kit restriction!"
+arena.onlykit.set.success: "&aArena &e%arena% &anow restricted to kit &e%kit%&a!"
+arena.onlykit.set.info: "&7Only this kit can be used in this arena."
+arena.onlykit.set.failed: "&cFailed to set kit restriction!"
+arena.build.usage: "&cInvalid usage. Use: &e%usage%"
+arena.build.info: "&7Toggles build mode for the arena."
+arena.build.enabled: "&aBuild mode enabled for arena &e%arena%&a!"
+arena.build.enabled.info: "&7Players can now build in this arena."
+arena.build.regeneration: "&7Arena will be regenerated after each match."
+arena.build.disabled: "&cBuild mode disabled for arena &e%arena%&c!"
+arena.build.disabled.info: "&7Players can no longer build in this arena."
+arena.world.disabled: "&cArena world teleportation is temporarily disabled."
+arena.world.failed: "&cFailed to teleport to arena world!"
+
+# Arena Help Messages
+arena.help.header: "&6&l=== Arena Commands ==="
+arena.help.create: "&e/arena create <name> &7- Create a new arena"
+arena.help.setspawn: "&e/arena setspawn <name> <1|2> &7- Set arena spawn point"
+arena.help.setbounds: "&e/arena setbounds <name> &7- Set arena boundaries"
+arena.help.onlykit: "&e/arena onlykit <name> <kit|none> &7- Restrict arena to specific kit"
+arena.help.build: "&e/arena build <name> &7- Toggle build mode for arena"
+arena.help.list: "&e/arena list &7- List all arenas"
+arena.help.delete: "&e/arena delete <name> &7- Delete an arena"
+arena.help.tool: "&e/arena tool &7- Get arena selection tool"
+arena.help.world: "&e/arena world &7- Teleport to arena world"
+
 # Kit Command Messages
 kit-created: "&aKit &e%kit% &ahas been created."
 kit-deleted: "&cKit &e%kit% &chas been deleted."
@@ -33,6 +89,46 @@ kit-edited: "&aKit &e%kit% &ahas been edited."
 kit-saved: "&aKit &e%kit% &ahas been saved."
 kit-inventory-set: "&aInventory set for kit &e%kit%&a."
 
+# Kit Command Detailed Messages
+kit.create.success: "&aKit &e%kit% &ahas been created successfully!"
+kit.create.error.exists: "&cKit &e%kit% &calready exists!"
+kit.delete.success: "&aKit &e%kit% &ahas been deleted!"
+kit.error.not-found: "&cKit &e%kit% &cnot found!"
+kit.list.header: "&6&l=== Available Kits ==="
+kit.list.empty: "&cNo kits found!"
+kit.list.item: "&e%kit%"
+kit.icon.error.no-item: "&cYou must hold an item in your hand to set as icon!"
+kit.icon.success: "&aIcon set for kit &e%kit%&a!"
+kit.display.success: "&aDisplay name set to &e%displayname% &afor kit &e%kit%&a!"
+kit.inventory.success: "&aInventory updated for kit &e%kit%&a!"
+kit.enable.success: "&aKit &e%kit% &ahas been enabled!"
+kit.sumo.toggle: "&aSumo mode &e%state% &afor kit &e%kit%&a!"
+kit.boxing.toggle: "&aBoxing mode &e%state% &afor kit &e%kit%&a!"
+kit.build.toggle: "&aBuild mode &e%state% &afor kit &e%kit%&a!"
+kit.current.success: "&aApplied kit &e%kit% &ato your inventory!"
+kit.kb.error.usage: "&cInvalid usage. Use: &e%usage1% &7or &e%usage2%"
+kit.kb.error.profile-not-found: "&cKnockback profile &e%profile% &cnot found!"
+kit.kb.info.list-profiles: "&7Use &e/knockback profiles &7to see available profiles."
+kit.kb.error.profile-disabled: "&cKnockback profile &e%profile% &cis disabled!"
+kit.kb.success: "&aKnockback profile &e%profile% &aset for kit &e%kit%&a!"
+
+# Kit Help Messages
+kit.help.header: "&6&l=== Kit Commands ==="
+kit.help.create: "&e/kit create <name> &7- Create a new kit from your inventory"
+kit.help.delete: "&e/kit delete <name> &7- Delete a kit"
+kit.help.icon: "&e/kit icon <name> &7- Set kit icon from held item"
+kit.help.display: "&e/kit display <name> <displayname> &7- Set kit display name"
+kit.help.inventory: "&e/kit inventory <name> &7- Update kit inventory from your inventory"
+kit.help.inv: "&e/kit inv <name> &7- Alias for inventory command"
+kit.help.current: "&e/kit current <name> &7- Apply kit to your inventory"
+kit.help.enable: "&e/kit enable <name> &7- Enable a kit"
+kit.help.sumo: "&e/kit sumo <name> &7- Toggle sumo mode for kit"
+kit.help.boxing: "&e/kit boxing <name> &7- Toggle boxing mode for kit"
+kit.help.build: "&e/kit build <name> &7- Toggle build mode for kit"
+kit.help.kb: "&e/kit kb <name> <profile> &7- Set knockback profile for kit"
+kit.help.knockback: "&e/kit knockback <name> <profile> &7- Set knockback profile for kit"
+kit.help.list: "&e/kit list &7- List all kits"
+
 # Queue Command Messages
 queue-join: "&aYou have joined the &e%queue% &aqueue."
 queue-leave: "&cYou have left the queue."
@@ -40,6 +136,21 @@ queue-already-in: "&cYou are already in a queue."
 queue-not-in: "&cYou are not in any queue."
 queue-finding-match: "&aSearching for a match..."
 queue-match-found: "&aMatch found! Connecting to &e%arena%&a..."
+
+# Queue Command Specific Messages
+queue.join.invalid-usage: "&cInvalid usage. Use: &e%usage%"
+queue.join.invalid-type: "&cInvalid queue type! Use 'unranked' or 'ranked'."
+queue.join.failed: "&cFailed to join queue! You might already be in a queue or the kit doesn't exist."
+queue.leave.not-in-queue: "&cYou are not in a queue!"
+queue.status.header: "&6&l=== Queue Status ==="
+queue.status.kit: "&eKit: &f%kit%"
+queue.status.type: "&eType: &f%type%"
+queue.status.players: "&ePlayers in queue: &f%size%"
+queue.status.not-in-queue: "&eYou are not in a queue."
+queue.help.header: "&6&l=== Queue Commands ==="
+queue.help.join: "&e/queue join <kit> <unranked|ranked> &7- Join a queue"
+queue.help.leave: "&e/queue leave &7- Leave current queue"
+queue.help.status: "&e/queue status &7- Show queue status"
 
 # Tournament Command Messages
 tournament-created: "&aTournament &e%tournament% &ahas been created."
@@ -59,31 +170,175 @@ spectate-leave: "&cYou are no longer spectating."
 spectate-not-found: "&cNo match found to spectate."
 spectate-not-allowed: "&cYou cannot spectate this match."
 
+# Spectate Command Detailed Messages
+spectate.playerdata.error: "&cFailed to load player data!"
+spectate.state.invalid: "&cYou cannot spectate while in a match or queue!"
+spectate.player.notfound: "&cPlayer &e%player% &cnot found!"
+spectate.match.inactive: "&cTarget player is not in an active match!"
+spectate.match.players.offline: "&cMatch players are offline!"
+spectate.help.header: "&6&l=== Spectate Commands ==="
+spectate.help.specify: "&e/spectate <player> &7- Spectate a specific player's match"
+spectate.help.stop: "&e/spectate &7- Stop spectating current match"
+spectate.help.empty: "&7Use &e/spectate &7to see active matches"
+spectate.matches.none: "&cNo active matches to spectate!"
+spectate.matches.header: "&6&l=== Active Matches ==="
+spectate.matches.entry: "&e%player1% &7vs &e%player2% &7in &e%kit% &7(%type%)"
+spectate.matches.footer: "&7Use &e/spectate <player> &7to spectate a match"
+spectate.started: "&aYou are now spectating &e%match%&a!"
+spectate.stop.hint: "&7Use &e/spectate &7to stop spectating"
+spectate.stopped: "&cYou are no longer spectating."
+spectate.stopped.tournament: "&cYou are no longer spectating the tournament match."
+
 # Settings Command Messages
 settings-updated: "&aYour settings have been updated."
 settings-reset: "&aYour settings have been reset to default."
+settings.subcommand.unknown: "&cUnknown settings subcommand! Use &e/settings help &cfor help."
+
+# Settings Help Messages
+settings.help.header: "&6&l=== Settings Commands ==="
+settings.help.open: "&e/settings &7- Open settings GUI"
+settings.help.help: "&e/settings help &7- Show this help menu"
+settings.help.book: "&e/settings book &7- Get settings book (if available)"
 
 # Spawn Command Messages
 spawn-teleported: "&aYou have been teleported to spawn."
 spawn-not-set: "&cSpawn location is not set."
+spawn.success: "&aYou have been teleported to spawn!"
+spawn.playerdata.error: "&cFailed to load player data!"
+spawn.state.invalid: "&cYou cannot teleport to spawn while in a match!"
 
 # Build Command Messages
 build-enabled: "&aBuild mode enabled."
 build-disabled: "&cBuild mode disabled."
 build-no-permission: "&cYou do not have permission to build here."
+build.subcommand.unknown: "&cUnknown build subcommand! Use &e/build help &cfor help."
+build.disable.hint: "&7Use &e/build off &7to disable build mode."
+build.status.enabled: "&aBuild mode is currently &eENABLED&a."
+build.status.disabled: "&cBuild mode is currently &eDISABLED&c."
 
 # HitDelay Command Messages
 hitdelay-set: "&aHit delay set to &e%delay%&a."
 hitdelay-reset: "&aHit delay reset to default."
 hitdelay-invalid: "&cInvalid hit delay value."
 
+# HitDelay Command Detailed Messages
+hitdelay.create.usage: "&cInvalid usage. Use: &e/hitdelay create <profile> <delay>"
+hitdelay.create.example: "&7Example: &e/hitdelay create classic 500"
+hitdelay.create.delay-info: "&7Delay is in milliseconds (500ms = classic 1.7.10 PVP timing)"
+hitdelay.create.success: "&aHit delay profile &e%profile% &acreated with &e%delay%ms &adelay!"
+hitdelay.delay.negative: "&cDelay cannot be negative!"
+hitdelay.delay.invalid: "&cInvalid delay format! Please use a valid number."
+
 # Knockback Command Messages
 knockback-set: "&aKnockback settings updated."
 knockback-reset: "&aKnockback settings reset to default."
 
+# Knockback Command Detailed Messages
+knockback.profile.create.success: "&aKnockback profile &e%profile% &acreated successfully!"
+knockback.profile.create.exists: "&cKnockback profile &e%profile% &calready exists!"
+knockback.profile.create.invalid-number: "&cInvalid number format! Please use valid decimal numbers."
+knockback.profile.delete.success: "&aKnockback profile &e%profile% &adeleted successfully!"
+knockback.profile.delete.not-found: "&cKnockback profile &e%profile% &cnot found!"
+knockback.profile.list.header: "&6&l=== Knockback Profiles ==="
+knockback.profile.list.empty: "&cNo knockback profiles found!"
+knockback.profile.list.item: "&e%profile% &7- %status-color%%status%"
+
+# Knockback Profile Info Messages
+knockback.profile.info.usage: "&cInvalid usage. Use: &e%usage%"
+knockback.profile.info.not-found: "&cKnockback profile &e%profile% &cnot found!"
+knockback.profile.info.header: "&6&l=== Knockback Profile: %profile% ==="
+knockback.profile.info.horizontal: "&eHorizontal: &f%value%"
+knockback.profile.info.vertical: "&eVertical: &f%value%"
+knockback.profile.info.vertical-limit: "&eVertical Limit: &f%value%"
+knockback.profile.info.extra-horizontal: "&eExtra Horizontal: &f%value%"
+knockback.profile.info.extra-vertical: "&eExtra Vertical: &f%value%"
+knockback.profile.info.extra-vertical-limit: "&eExtra Vertical Limit: &f%value%"
+knockback.profile.info.netherite-resistance: "&eNetherite Resistance: &f%value%"
+knockback.profile.info.vertical-friction-reduction: "&eVertical Friction Reduction: &f%value%"
+knockback.profile.info.horizontal-friction: "&eHorizontal Friction: &f%value%"
+knockback.profile.info.vertical-friction: "&eVertical Friction: &f%value%"
+knockback.profile.info.disable-sprint-toggle: "&eDisable Sprint Toggle: &f%value%"
+knockback.profile.info.sprint-reset-ticks: "&eSprint Reset Ticks: &f%value%"
+knockback.profile.info.enabled: "&eEnabled: %status%"
+
+# Knockback Profile Enable/Disable Messages
+knockback.profile.enable.usage: "&cInvalid usage. Use: &e%usage%"
+knockback.profile.enable.success: "&aKnockback profile &e%profile% &a%status%!"
+knockback.profile.enable.not-found: "&cKnockback profile &e%profile% &cnot found!"
+
+# Knockback Profile Update Messages
+knockback.profile.update.usage: "&cInvalid usage. Use: &e%usage%"
+knockback.profile.update.example: "&7Example: &e/kb update light 0.25 0.25 0.35 0.35 0.08"
+knockback.profile.update.success: "&aKnockback profile &e%profile% &aupdated successfully!"
+knockback.profile.update.not-found: "&cKnockback profile &e%profile% &cnot found!"
+knockback.profile.update.invalid-number: "&cInvalid number format! Please use valid decimal numbers."
+
+# Knockback Friction Messages
+knockback.friction.usage: "&cInvalid usage. Use: &e%usage%"
+knockback.friction.example: "&7Example: &e/kb friction minehq true 1.5 1.0"
+knockback.friction.profile-not-found: "&cKnockback profile &e%profile% &cnot found!"
+knockback.friction.success: "&aFriction settings updated for profile &e%profile%&a!"
+knockback.friction.vertical-friction-reduction: "&eVertical Friction Reduction: &f%value%"
+knockback.friction.horizontal-friction: "&eHorizontal Friction: &f%value%"
+knockback.friction.vertical-friction: "&eVertical Friction: &f%value%"
+knockback.friction.invalid-number: "&cInvalid number format! Please use valid decimal numbers."
+
+# Knockback Sprint Messages
+knockback.sprint.usage: "&cInvalid usage. Use: &e%usage%"
+knockback.sprint.example: "&7Example: &e/kb sprint minehq true"
+knockback.sprint.profile-not-found: "&cKnockback profile &e%profile% &cnot found!"
+knockback.sprint.success: "&aSprint toggle setting updated for profile &e%profile%&a!"
+knockback.sprint.disable-sprint-toggle: "&eDisable Sprint Toggle: &f%value%"
+knockback.sprint.invalid-boolean: "&cInvalid boolean format! Please use 'true' or 'false'."
+
+# Knockback Sprint Reset Messages
+knockback.sprintreset.usage: "&cInvalid usage. Use: &e%usage%"
+knockback.sprintreset.example: "&7Example: &e/kb sprintreset minehq 5"
+knockback.sprintreset.profile-not-found: "&cKnockback profile &e%profile% &cnot found!"
+knockback.sprintreset.success: "&aSprint reset ticks updated for profile &e%profile%&a!"
+knockback.sprintreset.sprint-reset-ticks: "&eSprint Reset Ticks: &f%value%"
+knockback.sprintreset.invalid-number: "&cInvalid number format! Please use a valid integer."
+
+# Knockback Help Messages
+knockback.help.header: "&6&l=== Knockback Commands ==="
+knockback.help.create: "&e/kb create <name> <h> <v> <vl> <eh> <ev> [netherite] &7- Create knockback profile"
+knockback.help.delete: "&e/kb delete <name> &7- Delete knockback profile"
+knockback.help.update: "&e/kb update <name> <h> <v> <vl> <eh> <ev> [netherite] &7- Update knockback profile"
+knockback.help.list: "&e/kb list &7- List all knockback profiles"
+knockback.help.info: "&e/kb info <name> &7- Show profile details"
+knockback.help.enable: "&e/kb enable <name> &7- Enable profile"
+knockback.help.disable: "&e/kb disable <name> &7- Disable profile"
+knockback.help.friction: "&e/kb friction <name> <vfr> <hf> <vf> &7- Set friction settings"
+knockback.help.sprint: "&e/kb sprint <name> <dst> &7- Set sprint toggle setting"
+knockback.help.sprintreset: "&e/kb sprintreset <name> <srt> &7- Set sprint reset ticks"
+knockback.help.parameters: "&7Parameters: h=horizontal, v=vertical, vl=verticalLimit, eh=extraHorizontal, ev=extraVertical"
+knockback.help.friction-params: "&7Friction: vfr=verticalFrictionReduction, hf=horizontalFriction, vf=verticalFriction"
+knockback.help.sprint-params: "&7Sprint: dst=disableSprintToggle, srt=sprintResetTicks"
+
 # Leaderboard Command Messages
 leaderboard-shown: "&aShowing leaderboard for &e%kit%&a."
 leaderboard-not-available: "&cLeaderboard not available for this kit."
+leaderboard.unknown-type: "&cUnknown leaderboard type or kit. Available: elo, wins, or kit name"
+
+# Leaderboard ELO Messages
+leaderboard.elo.header: "&6&l=== Top %size% ELO Leaderboard ==="
+leaderboard.elo.empty: "&cNo players found with ELO above &e%elo%"
+leaderboard.elo.entry: "&e#%position% &f%player% &7- &a%elo% ELO"
+
+# Leaderboard Wins Messages
+leaderboard.wins.header: "&6&l=== Top %size% Wins Leaderboard ==="
+leaderboard.wins.empty: "&cNo players found with wins"
+leaderboard.wins.entry: "&e#%position% &f%player% &7- &a%wins% wins"
+
+# Leaderboard Kit Messages
+leaderboard.kits.header: "&6&l=== Top %size% ELO by Kit ==="
+leaderboard.kits.empty: "&cNo players found with ELO above &e%elo%"
+leaderboard.kits.entry: "&e#%position% &f%player% &7- &a%elo% ELO &7in &b%kit%"
+
+# Leaderboard Specific Kit Messages
+leaderboard.kit.header: "&6&l=== Top %size% %kit% Leaderboard ==="
+leaderboard.kit.empty: "&cNo players found with ELO above &e%elo% &cin &e%kit%"
+leaderboard.kit.entry: "&e#%position% &f%player% &7- &a%elo% ELO"
 
 # Match Messages
 match-starting: "&aMatch starting in &e%seconds% &aseconds..."
@@ -153,6 +408,28 @@ broadcast-match-start: "&a&l[Match] &e%player1% &7vs &e%player2% &7in &e%kit%"
 # Help Messages
 help-header: "&6&lCraftPractice Commands"
 help-footer: "&7Use &e/command help &7for more information"
+
+# Practice Command Help Messages
+practice.help.header: "&6&l=== Practice Commands ==="
+practice.help.commands.practice: "&e/practice help &7- Show this help menu"
+practice.help.commands.stats: "&e/practice stats &7- Show your statistics"
+practice.help.commands.setspawn: "&e/practice setspawn &7- Set the practice spawn location"
+practice.help.commands.spawn: "&e/practice spawn &7- Teleport to practice spawn"
+practice.help.commands.arena: "&e/practice arena &7- Arena management commands"
+practice.help.commands.kit: "&e/practice kit &7- Kit management commands"
+practice.help.commands.queue: "&e/practice queue &7- Queue management commands"
+
+# Practice Stats Messages
+practice.stats.header: "&6&l=== Your Statistics ==="
+practice.stats.global.elo: "&eGlobal ELO: &f%elo%"
+practice.stats.global.wins: "&eGlobal Wins: &f%wins%"
+practice.stats.global.losses: "&eGlobal Losses: &f%losses%"
+practice.stats.global.winrate: "&eGlobal Win Rate: &f%winrate%"
+practice.stats.kits.header: "&6&l=== Kit Statistics ==="
+practice.stats.kits.entry: "&e%kit%: &fELO: %elo% &7| &fW: %wins% &7| &fL: %losses% &7| &fWR: %winrate%"
+practice.setspawn.success: "&aSpawn location has been set successfully!"
+practice.debug.enabled: "&aDebug mode enabled for matches."
+practice.debug.disabled: "&cDebug mode is not available."
 
 # Update Messages
 update-available: "&aA new update is available! Download from: &e%url%"

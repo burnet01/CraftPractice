@@ -3,13 +3,14 @@ main: rip.thecraft.practice.Practice
 version: 0.0.1
 description: Competitive PvP Practice Plugin
 author: TheCraft
+api-version: 1.13
 folia-supported: true
 
 commands:
   practice:
     description: Main practice plugin command
     usage: /practice
-    aliases: [prac, duel]
+    aliases: [prac]
   arena:
     description: Arena management commands
     usage: /arena <create|setspawn|setbounds|list|delete>

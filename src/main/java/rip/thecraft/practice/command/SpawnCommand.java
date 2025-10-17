@@ -8,13 +8,14 @@ import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.player.PlayerData;
 import rip.thecraft.practice.player.PlayerState;
+import rip.thecraft.practice.util.MessageManager;
 
 public class SpawnCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -22,14 +23,14 @@ public class SpawnCommand implements CommandExecutor {
         PlayerData playerData = Practice.getInstance().getPlayerManager().getPlayerData(player);
         
         if (playerData == null) {
-            player.sendMessage(ChatColor.RED + "Failed to load your player data.");
+            MessageManager.getInstance().sendMessage(player, "spawn.playerdata.error");
             return true;
         }
 
         // Check if player is in a match
         if (playerData.getState() == PlayerState.MATCH) {
             if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-                player.sendMessage(ChatColor.RED + "You cannot use /spawn while in a match!");
+                MessageManager.getInstance().sendMessage(player, "spawn.state.invalid");
             }
             return true;
         }
@@ -65,7 +66,7 @@ public class SpawnCommand implements CommandExecutor {
         Practice.getInstance().getScoreboardService().forceUpdatePlayerScoreboard(player);
         
         if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-            player.sendMessage(ChatColor.GREEN + "Teleported to spawn!");
+            MessageManager.getInstance().sendMessage(player, "spawn.success");
         }
         
         return true;

@@ -182,7 +182,7 @@ public class ItemManager implements Listener {
      */
     private void openPracticeMenu(Player player) {
         // Execute the practice command to open the actual GUI
-        player.performCommand("practice");
+        player.openInventory(Practice.getInstance().getKitManager().createKitSelectionGUI());
     }
 
     /**

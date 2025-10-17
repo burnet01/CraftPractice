@@ -1,6 +1,5 @@
 package rip.thecraft.practice.command;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,13 +7,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rip.thecraft.practice.Practice;
+import rip.thecraft.practice.util.MessageManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class KitCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -76,67 +79,62 @@ public class KitCommand implements CommandExecutor {
 
     private void createKit(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit create <name>");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("usage", "/kit create <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit create <name>");
             return;
         }
 
         String name = args[1];
         if (Practice.getInstance().getKitManager().createKitFromInventory(name, player)) {
-            player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' created from your inventory!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.create.success", placeholders);
         } else {
-            player.sendMessage(ChatColor.RED + "A kit with that name already exists!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.create.error.exists", placeholders);
         }
     }
 
-    private void editKit(Player player, String[] args) {
-        if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit edit <name>");
-            return;
-        }
 
-        String name = args[1];
-        var kit = Practice.getInstance().getKitManager().getKit(name);
-        if (kit == null) {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
-            return;
-        }
-
-        // For now, just apply the kit to the player for editing
-        Practice.getInstance().getKitManager().applyKit(player, kit);
-        player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' applied to your inventory!");
-        player.sendMessage(ChatColor.YELLOW + "Edit your inventory and use /kit save " + name + " to save changes.");
-    }
 
     private void deleteKit(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit delete <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit delete <name>");
             return;
         }
 
         String name = args[1];
         if (Practice.getInstance().getKitManager().deleteKit(name)) {
-            player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' deleted!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.delete.success", placeholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void listKits(Player player) {
         var kits = Practice.getInstance().getKitManager().getKitNames();
         if (kits.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "No kits configured.");
+            MessageManager.getInstance().sendMessage(player, "kit.list.empty");
             return;
         }
 
-        player.sendMessage(ChatColor.GOLD + "=== Kits ===");
+        MessageManager.getInstance().sendMessage(player, "kit.list.header");
         for (String name : kits) {
-            player.sendMessage(ChatColor.YELLOW + "- " + name);
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.list.item", placeholders);
         }
     }
 
     private void setKitIcon(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit icon <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit icon <name>");
             return;
         }
 
@@ -144,20 +142,24 @@ public class KitCommand implements CommandExecutor {
         ItemStack itemInHand = player.getInventory().getItemInHand();
         
         if (itemInHand == null || itemInHand.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "You must hold an item in your hand to set as the kit icon!");
+            MessageManager.getInstance().sendMessage(player, "kit.icon.error.no-item");
             return;
         }
 
         if (Practice.getInstance().getKitManager().setKitIcon(name, itemInHand)) {
-            player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' icon set to the item in your hand!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.icon.success", placeholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void setKitDisplayName(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit display <name> <displayname>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit display <name> <displayname>");
             return;
         }
 
@@ -167,44 +169,58 @@ public class KitCommand implements CommandExecutor {
             displayName.append(args[i]).append(" ");
         }
 
-        if (Practice.getInstance().getKitManager().setKitDisplayName(name, displayName.toString().trim())) {
-            player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' display name set to '" + displayName.toString().trim() + "'!");
+        String displayNameStr = displayName.toString().trim();
+        if (Practice.getInstance().getKitManager().setKitDisplayName(name, displayNameStr)) {
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            placeholders.put("displayname", displayNameStr);
+            MessageManager.getInstance().sendMessage(player, "kit.display.success", placeholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void updateKitInventory(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit inventory <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit inventory <name>");
             return;
         }
 
         String name = args[1];
         if (Practice.getInstance().getKitManager().updateKitInventory(name, player)) {
-            player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' inventory updated from your inventory!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.inventory.success", placeholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void enableKit(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit enable <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit enable <name>");
             return;
         }
 
         String name = args[1];
         if (Practice.getInstance().getKitManager().setKitEnabled(name, true)) {
-            player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' enabled!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.enable.success", placeholders);
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void toggleSumoMode(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit sumo <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit sumo <name>");
             return;
         }
 
@@ -212,16 +228,21 @@ public class KitCommand implements CommandExecutor {
         if (Practice.getInstance().getKitManager().toggleSumoMode(name)) {
             var kit = Practice.getInstance().getKitManager().getKit(name);
             if (kit != null) {
-                player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' sumo mode " + (kit.isSumoMode() ? "enabled" : "disabled") + "!");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("kit", name);
+                placeholders.put("state", kit.isSumoMode() ? "enabled" : "disabled");
+                MessageManager.getInstance().sendMessage(player, "kit.sumo.toggle", placeholders);
             }
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void toggleBoxingMode(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit boxing <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit boxing <name>");
             return;
         }
 
@@ -229,34 +250,43 @@ public class KitCommand implements CommandExecutor {
         if (Practice.getInstance().getKitManager().toggleBoxingMode(name)) {
             var kit = Practice.getInstance().getKitManager().getKit(name);
             if (kit != null) {
-                player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' boxing mode " + (kit.isBoxingMode() ? "enabled" : "disabled") + "!");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("kit", name);
+                placeholders.put("state", kit.isBoxingMode() ? "enabled" : "disabled");
+                MessageManager.getInstance().sendMessage(player, "kit.boxing.toggle", placeholders);
             }
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void showCurrentKit(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit current <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit current <name>");
             return;
         }
 
         String name = args[1];
         var kit = Practice.getInstance().getKitManager().getKit(name);
         if (kit == null) {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
             return;
         }
 
         // Apply the kit to the player
         Practice.getInstance().getKitManager().applyKit(player, kit);
-        player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' applied to your inventory!");
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("kit", name);
+        MessageManager.getInstance().sendMessage(player, "kit.current.success", placeholders);
     }
 
     private void toggleBuildMode(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit build <name>");
+            MessageManager.getInstance().sendInvalidUsage(player, "/kit build <name>");
             return;
         }
 
@@ -264,17 +294,24 @@ public class KitCommand implements CommandExecutor {
         if (Practice.getInstance().getKitManager().toggleBuildMode(name)) {
             var kit = Practice.getInstance().getKitManager().getKit(name);
             if (kit != null) {
-                player.sendMessage(ChatColor.GREEN + "Kit '" + name + "' build mode " + (kit.isBuildMode() ? "enabled" : "disabled") + "!");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("kit", name);
+                placeholders.put("state", kit.isBuildMode() ? "enabled" : "disabled");
+                MessageManager.getInstance().sendMessage(player, "kit.build.toggle", placeholders);
             }
         } else {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", name);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
         }
     }
 
     private void setKitKnockback(Player player, String[] args) {
         if (args.length < 3) {
-            player.sendMessage(ChatColor.RED + "Usage: /kit kb <kitname> <knockbackprofilename>");
-            player.sendMessage(ChatColor.RED + "Usage: /kit knockback <kitname> <knockbackprofilename>");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("usage1", "/kit kb <kitname> <knockbackprofilename>");
+            placeholders.put("usage2", "/kit knockback <kitname> <knockbackprofilename>");
+            MessageManager.getInstance().sendMessage(player, "kit.kb.error.usage", placeholders);
             return;
         }
 
@@ -283,42 +320,51 @@ public class KitCommand implements CommandExecutor {
 
         var kit = Practice.getInstance().getKitManager().getKit(kitName);
         if (kit == null) {
-            player.sendMessage(ChatColor.RED + "Kit not found!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("kit", kitName);
+            MessageManager.getInstance().sendMessage(player, "kit.error.not-found", placeholders);
             return;
         }
 
         var profile = Practice.getInstance().getKnockbackManager().getProfile(profileName);
         if (profile == null) {
-            player.sendMessage(ChatColor.RED + "Knockback profile not found!");
-            player.sendMessage(ChatColor.YELLOW + "Use /kb list to see available profiles.");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("profile", profileName);
+            MessageManager.getInstance().sendMessage(player, "kit.kb.error.profile-not-found", placeholders);
+            MessageManager.getInstance().sendMessage(player, "kit.kb.info.list-profiles");
             return;
         }
 
         if (!profile.isEnabled()) {
-            player.sendMessage(ChatColor.RED + "That knockback profile is disabled!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("profile", profileName);
+            MessageManager.getInstance().sendMessage(player, "kit.kb.error.profile-disabled", placeholders);
             return;
         }
 
         kit.setKnockbackProfile(profileName);
         Practice.getInstance().getKitManager().saveKits();
-        player.sendMessage(ChatColor.GREEN + "Kit '" + kitName + "' knockback profile set to '" + profileName + "'!");
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("kit", kitName);
+        placeholders.put("profile", profileName);
+        MessageManager.getInstance().sendMessage(player, "kit.kb.success", placeholders);
     }
 
     private void sendHelp(Player player) {
-        player.sendMessage(ChatColor.GOLD + "=== Kit Commands ===");
-        player.sendMessage(ChatColor.YELLOW + "/kit create <name>" + ChatColor.WHITE + " - Create kit from your inventory");
-        player.sendMessage(ChatColor.YELLOW + "/kit delete <name>" + ChatColor.WHITE + " - Delete kit");
-        player.sendMessage(ChatColor.YELLOW + "/kit icon <name>" + ChatColor.WHITE + " - Set kit icon from held item");
-        player.sendMessage(ChatColor.YELLOW + "/kit display <name> <displayname>" + ChatColor.WHITE + " - Set kit display name");
-        player.sendMessage(ChatColor.YELLOW + "/kit inventory <name>" + ChatColor.WHITE + " - Update kit inventory from your inventory");
-        player.sendMessage(ChatColor.YELLOW + "/kit inv <name>" + ChatColor.WHITE + " - Alias for /kit inventory");
-        player.sendMessage(ChatColor.YELLOW + "/kit current <name>" + ChatColor.WHITE + " - Apply kit to your inventory");
-        player.sendMessage(ChatColor.YELLOW + "/kit enable <name>" + ChatColor.WHITE + " - Enable kit for queueing");
-        player.sendMessage(ChatColor.YELLOW + "/kit sumo <name>" + ChatColor.WHITE + " - Toggle sumo mode");
-        player.sendMessage(ChatColor.YELLOW + "/kit boxing <name>" + ChatColor.WHITE + " - Toggle boxing mode");
-        player.sendMessage(ChatColor.YELLOW + "/kit build <name>" + ChatColor.WHITE + " - Toggle build mode (allows block placement/breaking)");
-        player.sendMessage(ChatColor.YELLOW + "/kit kb <name> <profile>" + ChatColor.WHITE + " - Set knockback profile for kit");
-        player.sendMessage(ChatColor.YELLOW + "/kit knockback <name> <profile>" + ChatColor.WHITE + " - Alias for /kit kb");
-        player.sendMessage(ChatColor.YELLOW + "/kit list" + ChatColor.WHITE + " - List all kits");
+        MessageManager.getInstance().sendMessage(player, "kit.help.header");
+        MessageManager.getInstance().sendMessage(player, "kit.help.create");
+        MessageManager.getInstance().sendMessage(player, "kit.help.delete");
+        MessageManager.getInstance().sendMessage(player, "kit.help.icon");
+        MessageManager.getInstance().sendMessage(player, "kit.help.display");
+        MessageManager.getInstance().sendMessage(player, "kit.help.inventory");
+        MessageManager.getInstance().sendMessage(player, "kit.help.inv");
+        MessageManager.getInstance().sendMessage(player, "kit.help.current");
+        MessageManager.getInstance().sendMessage(player, "kit.help.enable");
+        MessageManager.getInstance().sendMessage(player, "kit.help.sumo");
+        MessageManager.getInstance().sendMessage(player, "kit.help.boxing");
+        MessageManager.getInstance().sendMessage(player, "kit.help.build");
+        MessageManager.getInstance().sendMessage(player, "kit.help.kb");
+        MessageManager.getInstance().sendMessage(player, "kit.help.knockback");
+        MessageManager.getInstance().sendMessage(player, "kit.help.list");
     }
 }

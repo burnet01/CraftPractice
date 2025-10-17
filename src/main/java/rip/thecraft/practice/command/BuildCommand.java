@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
+import rip.thecraft.practice.util.MessageManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,14 +20,14 @@ public class BuildCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
         Player player = (Player) sender;
 
         if (!player.hasPermission("practice.build.bypass")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
+            MessageManager.getInstance().sendNoPermission(player);
             return true;
         }
 
@@ -47,7 +48,7 @@ public class BuildCommand implements CommandExecutor {
                 showBuildStatus(player);
                 break;
             default:
-                player.sendMessage(ChatColor.RED + "Unknown subcommand. Use /build [on|off|status]");
+                MessageManager.getInstance().sendMessage(player, "build.subcommand.unknown");
                 break;
         }
 
@@ -67,22 +68,22 @@ public class BuildCommand implements CommandExecutor {
     private void enableBuildBypass(Player player) {
         UUID playerId = player.getUniqueId();
         buildBypassPlayers.add(playerId);
-        player.sendMessage(ChatColor.GREEN + "Build bypass enabled! You can now break and place any blocks in arenas.");
-        player.sendMessage(ChatColor.YELLOW + "Use /build off to disable this mode.");
+        MessageManager.getInstance().sendMessage(player, "build.enabled");
+        MessageManager.getInstance().sendMessage(player, "build.disable.hint");
     }
 
     private void disableBuildBypass(Player player) {
         UUID playerId = player.getUniqueId();
         buildBypassPlayers.remove(playerId);
-        player.sendMessage(ChatColor.RED + "Build bypass disabled! Normal arena restrictions apply.");
+        MessageManager.getInstance().sendMessage(player, "build.disabled");
     }
 
     private void showBuildStatus(Player player) {
         UUID playerId = player.getUniqueId();
         if (buildBypassPlayers.contains(playerId)) {
-            player.sendMessage(ChatColor.GREEN + "Build bypass is currently ENABLED.");
+            MessageManager.getInstance().sendMessage(player, "build.status.enabled");
         } else {
-            player.sendMessage(ChatColor.RED + "Build bypass is currently DISABLED.");
+            MessageManager.getInstance().sendMessage(player, "build.status.disabled");
         }
     }
 

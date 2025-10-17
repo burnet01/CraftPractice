@@ -1,12 +1,12 @@
 package rip.thecraft.practice.command;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class PracticeCommand implements CommandExecutor {
@@ -41,6 +41,9 @@ public class PracticeCommand implements CommandExecutor {
             case "spawn":
                 teleportToSpawn(player);
                 break;
+            case "queue":
+                player.openInventory(Practice.getInstance().getKitManager().createKitSelectionGUI());
+                break;
             default:
                 Practice.getInstance().getMessageManager().sendMessage(player, "invalid-usage", 
                     Map.of("usage", "/practice help"));
@@ -52,36 +55,49 @@ public class PracticeCommand implements CommandExecutor {
 
     private void sendHelp(Player player) {
         if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
-            player.sendMessage(ChatColor.GOLD + "=== Practice Plugin Commands ===");
-            player.sendMessage(ChatColor.YELLOW + "/practice" + ChatColor.WHITE + " - Open kit selection");
-            player.sendMessage(ChatColor.YELLOW + "/practice stats" + ChatColor.WHITE + " - View your stats");
-            player.sendMessage(ChatColor.YELLOW + "/practice setspawn" + ChatColor.WHITE + " - Set practice spawn");
-            player.sendMessage(ChatColor.YELLOW + "/practice spawn" + ChatColor.WHITE + " - Teleport to spawn");
-            player.sendMessage(ChatColor.YELLOW + "/arena" + ChatColor.WHITE + " - Arena management");
-            player.sendMessage(ChatColor.YELLOW + "/kit" + ChatColor.WHITE + " - Kit management");
-            player.sendMessage(ChatColor.YELLOW + "/queue" + ChatColor.WHITE + " - Queue management");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.header");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.practice");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.stats");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.setspawn");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.spawn");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.arena");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.kit");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.help.commands.queue");
         }
     }
 
     private void showStats(Player player) {
         if (Practice.getInstance().getSettingsManager().hasMessagesEnabled(player)) {
             var playerData = Practice.getInstance().getPlayerManager().getPlayerData(player);
-            player.sendMessage(ChatColor.GOLD + "=== Your Stats ===");
-            player.sendMessage(ChatColor.YELLOW + "Global ELO: " + ChatColor.WHITE + playerData.getElo());
-            player.sendMessage(ChatColor.YELLOW + "Global Wins: " + ChatColor.WHITE + playerData.getWins());
-            player.sendMessage(ChatColor.YELLOW + "Global Losses: " + ChatColor.WHITE + playerData.getLosses());
-            player.sendMessage(ChatColor.YELLOW + "Global Win Rate: " + ChatColor.WHITE + String.format("%.2f%%", playerData.getWinRate()));
+            
+            Map<String, String> globalPlaceholders = new HashMap<>();
+            globalPlaceholders.put("elo", String.valueOf(playerData.getElo()));
+            globalPlaceholders.put("wins", String.valueOf(playerData.getWins()));
+            globalPlaceholders.put("losses", String.valueOf(playerData.getLosses()));
+            globalPlaceholders.put("winrate", String.format("%.2f%%", playerData.getWinRate()));
+            
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.header");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.global.elo", globalPlaceholders);
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.global.wins", globalPlaceholders);
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.global.losses", globalPlaceholders);
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.global.winrate", globalPlaceholders);
             
             // Show per-kit stats
             if (!playerData.getKitStats().isEmpty()) {
-                player.sendMessage(ChatColor.GOLD + "=== Per-Kit Stats ===");
+                Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.kits.header");
                 for (var entry : playerData.getKitStats().entrySet()) {
                     String kitName = entry.getKey();
                     var kitStats = entry.getValue();
                     double kitWinRate = kitStats.getWinRate();
-                    player.sendMessage(ChatColor.YELLOW + kitName + ": " + ChatColor.WHITE + 
-                        kitStats.getElo() + " ELO, " + kitStats.getWins() + "W/" + kitStats.getLosses() + "L (" + 
-                        String.format("%.2f%%", kitWinRate) + ")");
+                    
+                    Map<String, String> kitPlaceholders = new HashMap<>();
+                    kitPlaceholders.put("kit", kitName);
+                    kitPlaceholders.put("elo", String.valueOf(kitStats.getElo()));
+                    kitPlaceholders.put("wins", String.valueOf(kitStats.getWins()));
+                    kitPlaceholders.put("losses", String.valueOf(kitStats.getLosses()));
+                    kitPlaceholders.put("winrate", String.format("%.2f%%", kitWinRate));
+                    
+                    Practice.getInstance().getMessageManager().sendMessage(player, "practice.stats.kits.entry", kitPlaceholders);
                 }
             }
         }
@@ -103,7 +119,7 @@ public class PracticeCommand implements CommandExecutor {
         config.set("spawn.pitch", player.getLocation().getPitch());
         Practice.getInstance().saveConfig();
 
-        Practice.getInstance().getMessageManager().sendMessage(player, "spawn-teleported");
+        Practice.getInstance().getMessageManager().sendMessage(player, "practice.setspawn.success");
     }
 
     private void debugMatches(Player player) {
@@ -115,9 +131,9 @@ public class PracticeCommand implements CommandExecutor {
         var matchManager = Practice.getInstance().getMatchManager();
         if (matchManager != null) {
             matchManager.debugActiveMatches();
-            Practice.getInstance().getMessageManager().sendMessage(player, "debug-enabled");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.debug.enabled");
         } else {
-            Practice.getInstance().getMessageManager().sendMessage(player, "debug-disabled");
+            Practice.getInstance().getMessageManager().sendMessage(player, "practice.debug.disabled");
         }
     }
 

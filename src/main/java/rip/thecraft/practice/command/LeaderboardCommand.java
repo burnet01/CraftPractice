@@ -11,6 +11,9 @@ import org.bukkit.entity.Player;
 import rip.thecraft.practice.Practice;
 import rip.thecraft.practice.kit.Kit;
 import rip.thecraft.practice.player.PlayerData;
+import rip.thecraft.practice.util.MessageManager;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +30,7 @@ public class LeaderboardCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players.");
+            MessageManager.getInstance().sendPlayerOnly(sender);
             return true;
         }
 
@@ -53,7 +56,7 @@ public class LeaderboardCommand implements CommandExecutor {
                 showWinsLeaderboard(player);
                 break;
             default:
-                player.sendMessage(ChatColor.RED + "Unknown leaderboard type or kit. Available: elo, wins, or kit name");
+                MessageManager.getInstance().sendMessage(player, "leaderboard.unknown-type");
                 break;
         }
 
@@ -63,32 +66,46 @@ public class LeaderboardCommand implements CommandExecutor {
     private void showELOLeaderboard(Player player) {
         List<LeaderboardEntry> entries = getLeaderboard("elo");
         
-        player.sendMessage(ChatColor.GOLD + "=== Top " + LEADERBOARD_SIZE + " ELO Leaderboard ===");
+        Map<String, String> headerPlaceholders = new HashMap<>();
+        headerPlaceholders.put("size", String.valueOf(LEADERBOARD_SIZE));
+        MessageManager.getInstance().sendMessage(player, "leaderboard.elo.header", headerPlaceholders);
+        
         if (entries.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "No players found with ELO above " + STARTING_ELO);
+            Map<String, String> emptyPlaceholders = new HashMap<>();
+            emptyPlaceholders.put("elo", String.valueOf(STARTING_ELO));
+            MessageManager.getInstance().sendMessage(player, "leaderboard.elo.empty", emptyPlaceholders);
             return;
         }
         
         for (int i = 0; i < entries.size(); i++) {
             LeaderboardEntry entry = entries.get(i);
-            player.sendMessage(ChatColor.YELLOW + "#" + (i + 1) + " " + ChatColor.WHITE + 
-                entry.getPlayerName() + ChatColor.GRAY + " - " + ChatColor.GREEN + entry.getValue() + " ELO");
+            Map<String, String> entryPlaceholders = new HashMap<>();
+            entryPlaceholders.put("position", String.valueOf(i + 1));
+            entryPlaceholders.put("player", entry.getPlayerName());
+            entryPlaceholders.put("elo", String.valueOf(entry.getValue()));
+            MessageManager.getInstance().sendMessage(player, "leaderboard.elo.entry", entryPlaceholders);
         }
     }
 
     private void showWinsLeaderboard(Player player) {
         List<LeaderboardEntry> entries = getLeaderboard("wins");
         
-        player.sendMessage(ChatColor.GOLD + "=== Top " + LEADERBOARD_SIZE + " Wins Leaderboard ===");
+        Map<String, String> headerPlaceholders = new HashMap<>();
+        headerPlaceholders.put("size", String.valueOf(LEADERBOARD_SIZE));
+        MessageManager.getInstance().sendMessage(player, "leaderboard.wins.header", headerPlaceholders);
+        
         if (entries.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "No players found with wins");
+            MessageManager.getInstance().sendMessage(player, "leaderboard.wins.empty");
             return;
         }
         
         for (int i = 0; i < entries.size(); i++) {
             LeaderboardEntry entry = entries.get(i);
-            player.sendMessage(ChatColor.YELLOW + "#" + (i + 1) + " " + ChatColor.WHITE + 
-                entry.getPlayerName() + ChatColor.GRAY + " - " + ChatColor.GREEN + entry.getValue() + " wins");
+            Map<String, String> entryPlaceholders = new HashMap<>();
+            entryPlaceholders.put("position", String.valueOf(i + 1));
+            entryPlaceholders.put("player", entry.getPlayerName());
+            entryPlaceholders.put("wins", String.valueOf(entry.getValue()));
+            MessageManager.getInstance().sendMessage(player, "leaderboard.wins.entry", entryPlaceholders);
         }
     }
 
@@ -170,18 +187,26 @@ public class LeaderboardCommand implements CommandExecutor {
         // Sort by ELO descending
         allEntries.sort((a, b) -> Integer.compare(b.getElo(), a.getElo()));
         
-        player.sendMessage(ChatColor.GOLD + "=== Top " + TOP_KITS_SIZE + " ELO by Kit ===");
+        Map<String, String> headerPlaceholders = new HashMap<>();
+        headerPlaceholders.put("size", String.valueOf(TOP_KITS_SIZE));
+        MessageManager.getInstance().sendMessage(player, "leaderboard.kits.header", headerPlaceholders);
+        
         if (allEntries.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "No players found with ELO above " + STARTING_ELO);
+            Map<String, String> emptyPlaceholders = new HashMap<>();
+            emptyPlaceholders.put("elo", String.valueOf(STARTING_ELO));
+            MessageManager.getInstance().sendMessage(player, "leaderboard.kits.empty", emptyPlaceholders);
             return;
         }
         
         int count = 0;
         for (int i = 0; i < allEntries.size() && count < TOP_KITS_SIZE; i++) {
             KitLeaderboardEntry entry = allEntries.get(i);
-            player.sendMessage(ChatColor.YELLOW + "#" + (count + 1) + " " + ChatColor.WHITE + 
-                entry.getPlayerName() + ChatColor.GRAY + " - " + ChatColor.GREEN + 
-                entry.getElo() + " ELO" + ChatColor.GRAY + " in " + ChatColor.AQUA + entry.getKitName());
+            Map<String, String> entryPlaceholders = new HashMap<>();
+            entryPlaceholders.put("position", String.valueOf(count + 1));
+            entryPlaceholders.put("player", entry.getPlayerName());
+            entryPlaceholders.put("elo", String.valueOf(entry.getElo()));
+            entryPlaceholders.put("kit", entry.getKitName());
+            MessageManager.getInstance().sendMessage(player, "leaderboard.kits.entry", entryPlaceholders);
             count++;
         }
     }
@@ -213,16 +238,26 @@ public class LeaderboardCommand implements CommandExecutor {
         Kit kit = Practice.getInstance().getKitManager().getKit(kitName);
         String displayName = kit != null ? kit.getDisplayName() : kitName;
         
-        player.sendMessage(ChatColor.GOLD + "=== Top " + KIT_LEADERBOARD_SIZE + " " + displayName + " Leaderboard ===");
+        Map<String, String> headerPlaceholders = new HashMap<>();
+        headerPlaceholders.put("size", String.valueOf(KIT_LEADERBOARD_SIZE));
+        headerPlaceholders.put("kit", displayName);
+        MessageManager.getInstance().sendMessage(player, "leaderboard.kit.header", headerPlaceholders);
+        
         if (entries.isEmpty()) {
-            player.sendMessage(ChatColor.YELLOW + "No players found with ELO above " + STARTING_ELO + " in " + displayName);
+            Map<String, String> emptyPlaceholders = new HashMap<>();
+            emptyPlaceholders.put("elo", String.valueOf(STARTING_ELO));
+            emptyPlaceholders.put("kit", displayName);
+            MessageManager.getInstance().sendMessage(player, "leaderboard.kit.empty", emptyPlaceholders);
             return;
         }
         
         for (int i = 0; i < entries.size(); i++) {
             KitLeaderboardEntry entry = entries.get(i);
-            player.sendMessage(ChatColor.YELLOW + "#" + (i + 1) + " " + ChatColor.WHITE + 
-                entry.getPlayerName() + ChatColor.GRAY + " - " + ChatColor.GREEN + entry.getElo() + " ELO");
+            Map<String, String> entryPlaceholders = new HashMap<>();
+            entryPlaceholders.put("position", String.valueOf(i + 1));
+            entryPlaceholders.put("player", entry.getPlayerName());
+            entryPlaceholders.put("elo", String.valueOf(entry.getElo()));
+            MessageManager.getInstance().sendMessage(player, "leaderboard.kit.entry", entryPlaceholders);
         }
     }
 
